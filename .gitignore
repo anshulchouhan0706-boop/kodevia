@@ -1,0 +1,12 @@
+# dependencies (reinstall with: npm install)
+node_modules/
+
+# verification output: screenshots, contact sheets, logs
+lab/**/*.png
+lab/**/*.json
+lab/*.log
+lab/*.txt
+lab/*/
+!lab/*.mjs
+!lab/render.html
+!lab/sheet.sh
