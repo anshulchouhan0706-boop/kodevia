@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js"}}</script>
+</head><body><canvas id="c"></canvas>
+<script type="module">
+import { createScene, K_POSE } from '../kscene.js';
+const q = new URLSearchParams(location.search);
+const W = +q.get('w') || 1200, H = +q.get('h') || 900;
+const c = document.getElementById('c');
+c.style.width = W + 'px'; c.style.height = H + 'px';
+const S = createScene(c, { capture: true, maxDpr: +q.get('dpr') || 1 });
+S.resize(W, H, +q.get('dpr') || 1);
+window.S = S;
+window.shot = (cfg) => {
+  const T = S.THREE;
+  const poses = cfg.poses && cfg.poses.map(o => ({ p: new T.Vector3(...o.p), q: new T.Quaternion().setFromEuler(new T.Euler(...o.r)) }));
+  S.setPieces(cfg.t ?? (poses ? [0,0,0] : [1,1,1]), poses || undefined);
+  S.setRig(cfg.rig || {});
+  S.setLook(cfg.look || {});
+  if (cfg.cam) { S.camera.position.set(...cfg.cam.pos); S.camera.fov = cfg.cam.fov ?? 28; S.camera.updateProjectionMatrix(); S.camera.lookAt(...(cfg.cam.look || [0,0,0])); }
+  if (cfg.hideFloor) { S.floor.visible = false; S.glow.visible = false; }
+  S.render();
+  return true;
+};
+window.ready = true;
+</script></body></html>

@@ -1,0 +1,16 @@
+{
+  "name": "kodevia-site",
+  "private": true,
+  "description": "Kodevia web and app development: scroll-driven site with a live 3D brand mark.",
+  "type": "module",
+  "scripts": {
+    "serve": "npx --yes serve -l 4500 .",
+    "audit": "node lab/audit.mjs",
+    "render-assets": "node lab/render-assets.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.13.0",
+    "playwright-core": "1.63.0",
+    "three": "0.186.1"
+  }
+}
