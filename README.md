@@ -18,7 +18,9 @@ Then open http://localhost:4500. Any static server works; there is no build step
 
 | Path | What it is |
 |---|---|
-| `index.html` | The page: semantic HTML, all copy |
+| `index.html` | Home page: semantic HTML, all copy |
+| `work/` | Project pages: websites, mobile apps, product design (`work.css`, `work.js`) |
+| `assets/work/` | Real project screens, web-sized, plus design-detail crops |
 | `site.css` | Brand tokens, layout, micro-interactions |
 | `main.js` | Scroll and pointer choreography, brief form, interactions |
 | `kscene.js` | The 3D scene: capsule K, lights, materials |
@@ -32,8 +34,9 @@ Then open http://localhost:4500. Any static server works; there is no build step
 
 ## Before launch
 
-- Replace the placeholder `hello@kodevia.com` in `index.html` (form `action`
-  and footer link).
+- Replace the placeholder phone, WhatsApp number and email on the
+  `#connect` element in `index.html` (and the matching text and links inside
+  it, plus the footer email).
 - Confirm the authored content: tools list, "Why" promises, FAQ answers.
 
 ## Checks

@@ -1,0 +1,24 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => (m.type() === 'error' || m.type() === 'warning') && errs.push(m.text()));
+p.on('response', r => r.status() >= 400 && errs.push(r.status() + ' ' + r.url()));
+await p.goto('http://localhost:4500/', { waitUntil: 'networkidle' }); await p.waitForTimeout(2200);
+const k = await p.evaluate(() => ({ scene: !!window.__kodevia, noWebgl: document.documentElement.classList.contains('no-webgl') }));
+await p.click('.hero .demo__btn'); await p.waitForTimeout(500); await p.screenshot({ path: 'lab/r4-hero.png' });
+await p.mouse.click(5, 5); await p.waitForTimeout(300);
+await p.click('.bar .demo__btn'); await p.waitForTimeout(500); await p.screenshot({ path: 'lab/r4-bar.png', clip: { x: 900, y: 0, width: 540, height: 260 } });
+await p.mouse.click(5, 5);
+const shoot = async (sel, off, name, hover) => { await p.evaluate(([s, o]) => { const e = document.querySelector(s); scrollTo(0, e.getBoundingClientRect().top + scrollY - innerHeight * o); }, [sel, off]); await p.waitForTimeout(1500);
+  if (hover) { const r = await p.$(hover); const bx = await r.boundingBox(); await p.mouse.move(bx.x + bx.width / 2, bx.y + bx.height / 2, { steps: 6 }); await p.waitForTimeout(900); }
+  await p.screenshot({ path: `lab/r4-${name}.png` }); };
+await shoot('#assemble', -2.2, 'asm');
+await shoot('#services', -1.3, 'svc', '.svc:nth-of-type(2)');
+await shoot('#work', 0.02, 'work');
+await shoot('#work', 0.02, 'work2', '.wlist li:nth-child(2) .wrow');
+await shoot('.tools', 0.1, 'tools');
+await shoot('#process', -0.05, 'proc');
+await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await p.waitForTimeout(1500);
+await p.click('#start .demo__btn'); await p.waitForTimeout(500); await p.screenshot({ path: 'lab/r4-close.png' });
+console.log(JSON.stringify(k), errs.length ? errs.join('\n') : 'clean');
+await b.close();

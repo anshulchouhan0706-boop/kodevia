@@ -15,12 +15,12 @@
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preload" href="fonts/outfit.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="scrollcraft.css">
-<link rel="stylesheet" href="site.css">
-<script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+<link rel="stylesheet" href="fonts/fonts.css?v=4">
+<link rel="stylesheet" href="scrollcraft.css?v=4">
+<link rel="stylesheet" href="site.css?v=4">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.js?v=186" } }</script>
 </head>
-<body>
+<body data-phone="+910000000000" data-whatsapp="910000000000" data-email="hello@kodevia.com">
 
 <a class="skip" href="#main">Skip to content</a>
 <span data-sc-progress></span>
@@ -38,10 +38,15 @@
   <canvas class="scene__canvas" id="k"></canvas>
 </div>
 <div class="tags" aria-hidden="true">
-  <svg class="leaders" width="100%" height="100%"><line/><line/><line/><circle r="4"/><circle r="4"/><circle r="4"/></svg>
-  <div class="tag" data-tag="0"><span class="tag__line"></span><p class="tag__name">Design</p><p class="tag__note">Interfaces and design systems, tested with real people.</p></div>
-  <div class="tag" data-tag="1"><span class="tag__line"></span><p class="tag__name">Web</p><p class="tag__note">Sites and web apps that load fast and grow with you.</p></div>
-  <div class="tag" data-tag="2"><span class="tag__line"></span><p class="tag__name">Apps</p><p class="tag__note">iOS and Android apps, shipped to both stores.</p></div>
+  <svg class="leaders" width="100%" height="100%">
+    <defs><linearGradient id="lead-g" x1="0" x2="1"><stop offset="0" stop-color="#C084FC" stop-opacity="0.15"/><stop offset="1" stop-color="#C084FC"/></linearGradient></defs>
+    <g class="lead"><path class="lead__base" pathLength="1"/><path class="lead__flow"/><circle class="lead__ring" r="9"/><circle class="lead__dot" r="3.5"/></g>
+    <g class="lead"><path class="lead__base" pathLength="1"/><path class="lead__flow"/><circle class="lead__ring" r="9"/><circle class="lead__dot" r="3.5"/></g>
+    <g class="lead"><path class="lead__base" pathLength="1"/><path class="lead__flow"/><circle class="lead__ring" r="9"/><circle class="lead__dot" r="3.5"/></g>
+  </svg>
+  <div class="tag" data-tag="0"><p class="tag__name">Design</p><p class="tag__note">Interfaces and design systems, tested with real people.</p></div>
+  <div class="tag" data-tag="1"><p class="tag__name">Web</p><p class="tag__note">Sites and web apps that load fast and grow with you.</p></div>
+  <div class="tag" data-tag="2"><p class="tag__name">Apps</p><p class="tag__note">iOS and Android apps, shipped to both stores.</p></div>
 </div>
 
 <header class="bar">
@@ -50,18 +55,23 @@
     <span class="wordmark" aria-hidden="true">kodev<span class="wordmark__i">ı<span class="wordmark__dot"></span></span>a</span>
   </a>
   <nav class="nav" aria-label="Main">
+    <a class="nav__home" href="index.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span>Home</span></a>
+    <a href="#work">Work</a>
     <a href="#services">Services</a>
     <a href="#process">Process</a>
     <a href="#faq">FAQ</a>
   </nav>
-  <a class="btn btn--bar" href="#start">Start a project<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <div class="demo demo--down" data-demo>
+          <a class="btn btn--bar demo__btn" href="#start" aria-expanded="false" aria-controls="demo-bar">Book a free demo<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <ul class="demo__menu" id="demo-bar">
+            <li><a class="demo__opt" data-kind="call" href="tel:+910000000000"><span class="demo__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.6l1.4 4-2 1.6a12 12 0 0 0 6.3 6.3l1.6-2 4 1.4v2.6a2 2 0 0 1-2.2 2A16.6 16.6 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Call us<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+            <li><a class="demo__opt" data-kind="whatsapp" href="https://wa.me/910000000000" target="_blank" rel="noopener"><span class="demo__ic demo__ic--wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.1-3.9A8 8 0 1 1 8.6 18.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.2 8.6c.2 2.8 3.4 6 6.2 6.2l1-1.4-1.9-.9-.8.8a5 5 0 0 1-2.4-2.4l.8-.8-.9-1.9z" fill="currentColor"/></svg></span>WhatsApp<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+            <li><a class="demo__opt" data-kind="email" href="mailto:hello@kodevia.com"><span class="demo__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Email<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          </ul>
+        </div>
 </header>
 
-<a class="tray" href="#start" hidden>
-  <span class="tray__dot" aria-hidden="true"></span>
-  <span class="tray__text" aria-live="polite">0 services in your brief</span>
-  <span class="tray__go">Review<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+
 
 <main id="main">
 
@@ -75,8 +85,15 @@
         <h1 class="sc-display sc-display--xl hero__title" data-sc-kinetic="lines">Ideas into digital experiences.</h1>
         <p class="sc-lede hero__lede">We design and build websites and apps that people love to use.</p>
         <div class="hero__actions">
-          <a class="btn btn--primary" href="#start" data-sc-magnet="0.25">Start a project<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <a class="btn btn--ghost" href="#services">See what we build</a>
+          <div class="demo demo--side" data-demo>
+          <a class="btn btn--primary demo__btn" href="#start" aria-expanded="false" aria-controls="demo-hero">Book a free demo<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <ul class="demo__menu" id="demo-hero">
+            <li><a class="demo__opt" data-kind="call" href="tel:+910000000000"><span class="demo__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.6l1.4 4-2 1.6a12 12 0 0 0 6.3 6.3l1.6-2 4 1.4v2.6a2 2 0 0 1-2.2 2A16.6 16.6 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Call us<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+            <li><a class="demo__opt" data-kind="whatsapp" href="https://wa.me/910000000000" target="_blank" rel="noopener"><span class="demo__ic demo__ic--wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.1-3.9A8 8 0 1 1 8.6 18.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.2 8.6c.2 2.8 3.4 6 6.2 6.2l1-1.4-1.9-.9-.8.8a5 5 0 0 1-2.4-2.4l.8-.8-.9-1.9z" fill="currentColor"/></svg></span>WhatsApp<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+            <li><a class="demo__opt" data-kind="email" href="mailto:hello@kodevia.com"><span class="demo__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Email<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          </ul>
+        </div>
+          <a class="btn btn--ghost" href="#work">See our work</a>
         </div>
       </div>
     </div>
@@ -113,34 +130,29 @@
   <section id="services" class="services" data-sc-act="pan" data-sc-span="3.0" data-sc-drift="#0A0A0B">
     <div data-sc-stage class="services__stage">
       <div class="rail" data-sc-pan="0.04">
+        <svg class="rail__wire" aria-hidden="true"><path class="rail__wire-base"/><path class="rail__wire-glow"/><circle class="rail__wire-head" r="5"/></svg>
         <div class="rail__lead">
           <h2 class="sc-display sc-display--md">What we build</h2>
-          <p class="sc-body">Pick what you need. It goes straight into your project brief at the bottom of the page.</p>
+          <p class="sc-body">Three things we do. Open any one to see the real projects behind it.</p>
         </div>
-        <article class="svc" data-glow data-svc="Websites">
+        <a class="svc" href="work/websites.html" data-glow data-svc="Websites">
           <div class="svc__media" data-sc-tilt="5"><img src="assets/svc-web.webp" width="960" height="720" alt="Three lavender capsules stacked like layered browser bars" loading="lazy"></div>
-          <h3 class="svc__name">Websites</h3>
-          <p class="svc__text">Marketing sites and landing pages. Fast, accessible, and easy for your team to edit.</p>
-          <button class="pick" type="button" aria-pressed="false" data-pick="Websites"><span class="pick__icon" aria-hidden="true"></span><span class="pick__on">Added to brief</span><span class="pick__off">Add to brief</span></button>
-        </article>
-        <article class="svc" data-glow data-svc="Web apps">
-          <div class="svc__media" data-sc-tilt="5"><img src="assets/svc-webapp.webp" width="960" height="720" alt="One upright capsule beside two lying flat, arranged like a dashboard layout" loading="lazy"></div>
-          <h3 class="svc__name">Web apps</h3>
-          <p class="svc__text">Dashboards, portals and SaaS products, from the first screen to production.</p>
-          <button class="pick" type="button" aria-pressed="false" data-pick="Web apps"><span class="pick__icon" aria-hidden="true"></span><span class="pick__on">Added to brief</span><span class="pick__off">Add to brief</span></button>
-        </article>
-        <article class="svc" data-glow data-svc="Mobile apps">
+          <span class="svc__name">Websites</span>
+          <span class="svc__text">Marketing sites and landing pages. Fast, accessible, and easy for your team to edit.</span>
+          <span class="svc__go">Explore websites<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="svc" href="work/apps.html" data-glow data-svc="Mobile apps">
           <div class="svc__media" data-sc-tilt="5"><img src="assets/svc-mobile.webp" width="960" height="720" alt="A tall capsule standing upright like a phone, two smaller capsules behind it" loading="lazy"></div>
-          <h3 class="svc__name">Mobile apps</h3>
-          <p class="svc__text">iOS and Android, cross-platform or fully native, through to both app stores.</p>
-          <button class="pick" type="button" aria-pressed="false" data-pick="Mobile apps"><span class="pick__icon" aria-hidden="true"></span><span class="pick__on">Added to brief</span><span class="pick__off">Add to brief</span></button>
-        </article>
-        <article class="svc" data-glow data-svc="Product design">
+          <span class="svc__name">Mobile apps</span>
+          <span class="svc__text">iOS and Android, cross-platform or fully native, through to both app stores.</span>
+          <span class="svc__go">Explore mobile apps<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <a class="svc" href="work/design.html" data-glow data-svc="Product design">
           <div class="svc__media" data-sc-tilt="5"><img src="assets/svc-design.webp" width="960" height="720" alt="Two capsules crossed like drafting tools, a third resting beside them" loading="lazy"></div>
-          <h3 class="svc__name">Product design</h3>
-          <p class="svc__text">Research, UX and UI, handed over as a design system your developers can build from.</p>
-          <button class="pick" type="button" aria-pressed="false" data-pick="Product design"><span class="pick__icon" aria-hidden="true"></span><span class="pick__on">Added to brief</span><span class="pick__off">Add to brief</span></button>
-        </article>
+          <span class="svc__name">Product design</span>
+          <span class="svc__text">Research, UX and UI, handed over as a design system your developers can build from.</span>
+          <span class="svc__go">Explore product design<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
         <div class="rail__end">
           <p class="sc-lede">Not sure which yet?</p>
           <p class="sc-body">Bring the idea. We will help you work out the right shape for it.</p>
@@ -149,30 +161,66 @@
     </div>
   </section>
 
-  <!-- Tools strip: a running ticker between the rail and the process. -->
-  <section class="stack" aria-labelledby="stack-h" data-sc-drift="#0C0B10">
-    <h2 id="stack-h" class="stack__label">Tools we build with</h2>
-    <div class="stack__track">
-      <ul class="stack__list"><li>React</li><li>Next.js</li><li>TypeScript</li><li>Node.js</li><li>Flutter</li><li>React Native</li><li>Swift</li><li>Kotlin</li><li>Figma</li><li>PostgreSQL</li><li>Firebase</li><li>AWS</li></ul>
-      <ul class="stack__list" aria-hidden="true"><li>React</li><li>Next.js</li><li>TypeScript</li><li>Node.js</li><li>Flutter</li><li>React Native</li><li>Swift</li><li>Kotlin</li><li>Figma</li><li>PostgreSQL</li><li>Firebase</li><li>AWS</li></ul>
+  <!-- OUR WORK: three categories, each opens its own showcase page. -->
+  <section id="work" class="work sc-section" aria-labelledby="work-h" data-sc-drift="#0C0A12">
+    <div class="sc-wrap work__grid">
+      <div class="work__list">
+        <h2 id="work-h" class="work__h sc-display sc-display--lg" data-sc-in>Our work</h2>
+        <p class="sc-body work__lede" data-sc-in>Real projects, shipped for real businesses. Pick a category.</p>
+        <ul class="wlist" data-sc-in data-sc-stagger="80">
+          <li><a class="wrow is-on" href="work/websites.html" data-show="web">
+            <span class="wrow__n">Websites</span>
+            <span class="wrow__info"><span>Stores, property, travel, food</span><span class="wrow__count">6 projects</span></span>
+            <span class="wrow__arrow" aria-hidden="true"><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a class="wrow" href="work/apps.html" data-show="app">
+            <span class="wrow__n">Mobile apps</span>
+            <span class="wrow__info"><span>iOS and Android, everyday commerce</span><span class="wrow__count">6 projects</span></span>
+            <span class="wrow__arrow" aria-hidden="true"><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a class="wrow" href="work/design.html" data-show="design">
+            <span class="wrow__n">Product design</span>
+            <span class="wrow__info"><span>Type, components and colour</span><span class="wrow__count">Details</span></span>
+            <span class="wrow__arrow" aria-hidden="true"><svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+        </ul>
+      </div>
+      <div class="wstage" aria-hidden="true">
+        <div class="wscene is-on" data-scene="web">
+          <span class="wb wb--back"><i></i><img src="assets/work/w-travel-sm.webp" width="820" height="461" alt="" loading="lazy"></span>
+          <span class="wb wb--front"><i></i><img src="assets/work/w-furniture.webp" width="1600" height="900" alt="" loading="lazy"></span>
+        </div>
+        <div class="wscene" data-scene="app">
+          <span class="wp wp--l"><img src="assets/work/a-coffee-sm.webp" width="440" height="880" alt="" loading="lazy"></span>
+          <span class="wp wp--c"><img src="assets/work/a-pet-sm.webp" width="440" height="951" alt="" loading="lazy"></span>
+          <span class="wp wp--r"><img src="assets/work/a-interiors-sm.webp" width="440" height="951" alt="" loading="lazy"></span>
+        </div>
+        <div class="wscene" data-scene="design">
+          <span class="wd wd--a"><img src="assets/work/d-type.webp" width="610" height="348" alt="" loading="lazy"></span>
+          <span class="wd wd--b"><img src="assets/work/d-cards.webp" width="1086" height="282" alt="" loading="lazy"></span>
+          <span class="wd wd--c"><img src="assets/work/d-app-tiles.webp" width="853" height="230" alt="" loading="lazy"></span>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- Tools strip: a running ticker between the rail and the process. -->
+  <section class="tools" aria-labelledby="tools-h" data-sc-drift="#0C0B10">
+    <div class="sc-wrap tools__head"><h2 id="tools-h">Tools we build with</h2><p>Chosen per project, never by habit.</p></div>
+    <div class="tools__rows">
+      <div class="tools__row"><ul><li><i></i>React</li><li><i></i>Next.js</li><li><i></i>TypeScript</li><li><i></i>Node.js</li><li><i></i>PostgreSQL</li><li><i></i>Firebase</li><li><i></i>React</li><li><i></i>Next.js</li><li><i></i>TypeScript</li><li><i></i>Node.js</li><li><i></i>PostgreSQL</li><li><i></i>Firebase</li></ul></div>
+      <div class="tools__row tools__row--rev"><ul><li><i></i>Flutter</li><li><i></i>React Native</li><li><i></i>Swift</li><li><i></i>Kotlin</li><li><i></i>Figma</li><li><i></i>AWS</li><li><i></i>Flutter</li><li><i></i>React Native</li><li><i></i>Swift</li><li><i></i>Kotlin</li><li><i></i>Figma</li><li><i></i>AWS</li></ul></div>
+    </div>
+    <ul class="sr-only"><li>React</li><li>Next.js</li><li>TypeScript</li><li>Node.js</li><li>PostgreSQL</li><li>Firebase</li><li>Flutter</li><li>React Native</li><li>Swift</li><li>Kotlin</li><li>Figma</li><li>AWS</li></ul>
+  </section>
+
   <!-- 5 · SUBSTANCE. A wipe onto the material, then the plain process. -->
-  <section id="process" class="process" data-sc-act="flow" data-sc-drift="#100E16">
-    <figure class="band" data-sc-reveal="left" data-sc-reveal-at="0.08 0.38">
-      <img src="assets/band.webp" width="2400" height="960" alt="" loading="lazy">
-    </figure>
-    <div class="sc-wrap process__grid">
-      <div class="process__head sc-stack" data-sc-in>
-        <h2 class="sc-display sc-display--md">How a project runs</h2>
+  <section id="process" class="process sc-section" aria-labelledby="process-h" data-sc-drift="#100E16">
+    <div class="sc-wrap">
+      <div class="process__top" data-sc-in data-sc-stagger="70">
+        <h2 id="process-h" class="sc-display sc-display--md">How a project runs</h2>
         <p class="sc-body">Four stages, the same every time, so you always know what happens next.</p>
       </div>
-      <ol class="steps" data-sc-in data-sc-stagger="60">
-        <li class="step"><h3>Discover</h3><p>We learn the business, the people who will use it and the constraints, then agree what success looks like before anything is designed.</p></li>
-        <li class="step"><h3>Design</h3><p>Flows, wireframes and a clickable prototype you can put in front of real users. Then the visual design and a component system.</p></li>
-        <li class="step"><h3>Build</h3><p>Regular builds on a staging link you can open on your own phone. You see working software, not status reports.</p></li>
-        <li class="step"><h3>Launch and care</h3><p>Hosting, store submission and analytics, then ongoing support so the product keeps improving after day one.</p></li>
+      <ol class="tl">
+        <span class="tl__track" aria-hidden="true"><span class="tl__fill"></span></span>
+        <li class="tl__step"><span class="tl__node" aria-hidden="true"></span><h3>Discover</h3><p>We learn the business, the people who will use it and the constraints, and agree what success looks like.</p></li><li class="tl__step"><span class="tl__node" aria-hidden="true"></span><h3>Design</h3><p>Flows, wireframes and a clickable prototype you can test with real users, then the visual design.</p></li><li class="tl__step"><span class="tl__node" aria-hidden="true"></span><h3>Build</h3><p>Regular builds on a staging link you can open on your own phone. Working software, not status reports.</p></li><li class="tl__step"><span class="tl__node" aria-hidden="true"></span><h3>Launch and care</h3><p>Hosting, store submission and analytics, then ongoing support after day one.</p></li>
       </ol>
     </div>
   </section>
@@ -214,7 +262,7 @@
     <div class="sc-wrap faq__grid">
       <div class="faq__head sc-stack" data-sc-in>
         <h2 id="faq-h" class="sc-display sc-display--md">Questions</h2>
-        <p class="sc-body">Something else on your mind? Ask it in your brief below.</p>
+        <p class="sc-body">Something else on your mind? Ask us on your free demo call.</p>
       </div>
       <div class="faq__list" data-sc-in data-sc-stagger="50">
         <details>
@@ -241,36 +289,29 @@
     </div>
   </section>
 
-  <!-- 6 · COMMITMENT. Last element. The finished mark returns; the brief
-       carries what was picked on the rail. -->
+  <!-- 6 · COMMITMENT. Last element. The finished mark returns beside the
+       demo booking; picks from the rail travel into the message. -->
   <section id="start" class="start" data-sc-act="pin" data-sc-span="1.3" data-sc-drift="#0A0A0B">
     <div data-sc-stage class="start__stage">
       <div class="start__inner">
-        <h2 class="sc-display sc-display--lg start__title">Have an idea? Let’s build it.</h2>
-        <p class="sc-body">Tell us what you are making. We reply with questions, a rough plan and next steps.</p>
-        <form class="brief" id="brief" method="post" action="mailto:hello@kodevia.com" enctype="text/plain">
-          <fieldset class="brief__needs">
-            <legend>What do you need?</legend>
-            <label class="chip"><input type="checkbox" name="need" value="Websites"><span>Websites</span></label>
-            <label class="chip"><input type="checkbox" name="need" value="Web apps"><span>Web apps</span></label>
-            <label class="chip"><input type="checkbox" name="need" value="Mobile apps"><span>Mobile apps</span></label>
-            <label class="chip"><input type="checkbox" name="need" value="Product design"><span>Product design</span></label>
-          </fieldset>
-          <label class="field">
-            <span class="field__label">What are you building?</span>
-            <textarea name="idea" rows="3" required placeholder="A booking app for our clinics, a new site for launch…"></textarea>
-          </label>
-          <div class="brief__row">
-            <button class="btn btn--primary" type="submit" data-sc-magnet="0.22">Start a project<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <p class="brief__note" id="brief-note" role="status">Opens your email app with this brief filled in. Nothing is sent until you press send there.</p>
-          </div>
-        </form>
+        <p class="start__eyebrow">Free, no obligation</p>
+        <h2 class="sc-display sc-display--lg start__title">Book a free demo</h2>
+        <p class="sc-body start__lede">A short call about your idea. We walk you through how we would build it, with examples from our work, and what it would take.</p>
+        <div class="demo demo--side" data-demo>
+          <a class="btn btn--primary btn--lg demo__btn" href="#start" aria-expanded="false" aria-controls="demo-close" data-sc-magnet="0.22">Book a free demo<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <ul class="demo__menu" id="demo-close">
+            <li><a class="demo__opt" data-kind="call" href="tel:+910000000000"><span class="demo__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.6l1.4 4-2 1.6a12 12 0 0 0 6.3 6.3l1.6-2 4 1.4v2.6a2 2 0 0 1-2.2 2A16.6 16.6 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Call us<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+            <li><a class="demo__opt" data-kind="whatsapp" href="https://wa.me/910000000000" target="_blank" rel="noopener"><span class="demo__ic demo__ic--wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.1-3.9A8 8 0 1 1 8.6 18.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.2 8.6c.2 2.8 3.4 6 6.2 6.2l1-1.4-1.9-.9-.8.8a5 5 0 0 1-2.4-2.4l.8-.8-.9-1.9z" fill="currentColor"/></svg></span>WhatsApp<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+            <li><a class="demo__opt" data-kind="email" href="mailto:hello@kodevia.com"><span class="demo__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Email<svg class="demo__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          </ul>
+        </div>
       </div>
       <footer class="foot">
         <span class="foot__mark">kodevia</span>
         <nav class="foot__nav" aria-label="Footer">
-          <a href="#services">Services</a>
-          <a href="#process">Process</a>
+          <a href="work/websites.html">Websites</a>
+          <a href="work/apps.html">Mobile apps</a>
+          <a href="work/design.html">Product design</a>
           <a href="#faq">FAQ</a>
           <a href="mailto:hello@kodevia.com">hello@kodevia.com</a>
         </nav>
@@ -281,8 +322,8 @@
 
 </main>
 
-<script src="scrollcraft.js"></script>
+<script src="scrollcraft.js?v=4"></script>
 <script>ScrollCraft.mount(document.body);</script>
-<script type="module" src="main.js"></script>
+<script type="module" src="main.js?v=4"></script>
 </body>
 </html>

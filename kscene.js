@@ -3,7 +3,7 @@
    (lab/render.html) both build from this file, so every image on the site
    comes from the same shoot. */
 import * as THREE from 'three';
-import { RoomEnvironment } from './vendor/RoomEnvironment.js';
+import { RoomEnvironment } from './vendor/RoomEnvironment.js?v=186';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const Q = (x, y, z) => new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, z));
@@ -49,8 +49,10 @@ export function createScene(canvas, opts = {}) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap was removed in r18x; radius below softens PCF
+  // No real-time shadow map. It drew long dark streaks across the page from
+  // floating pieces and cost a second render pass every frame. A soft contact
+  // shadow under the finished mark (below) is cleaner and nearly free.
+  renderer.shadowMap.enabled = false;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -65,13 +67,6 @@ export function createScene(canvas, opts = {}) {
   // lavender fill. Matches the board renders.
   const key = new THREE.DirectionalLight(0xfff6ff, 2.6);
   key.position.set(-4, 6, 6);
-  key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
-  key.shadow.camera.left = -5; key.shadow.camera.right = 5;
-  key.shadow.camera.top = 5; key.shadow.camera.bottom = -5;
-  key.shadow.radius = 6;
-  key.shadow.blurSamples = 12;
-  key.shadow.bias = -0.0005;
   scene.add(key);
   const rim = new THREE.PointLight(0x9a5cff, 60, 30, 1.6);
   rim.position.set(3.5, 2.5, -4);
@@ -105,21 +100,22 @@ export function createScene(canvas, opts = {}) {
   const pieces = K_POSE.map((k, i) => {
     const geo = new THREE.CapsuleGeometry(k.radius, k.length, 24, 64);
     const mesh = new THREE.Mesh(geo, material);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
     mark.add(mesh);
     // The outer tip of each piece, in its own space, for label leaders.
     const tip = new THREE.Vector3(0, (k.length / 2 + k.radius * 0.6) * (k.name === 'leg' ? -1 : 1), 0);
     return { mesh, k, tip, offset: new THREE.Vector3(), vel: new THREE.Vector3() };
   });
 
-  // Floor: a shadow catcher plus a violet pool of light under the mark.
+  // Floor: a soft contact shadow plus a violet pool of light under the mark.
+  // Both are small textured planes, so nothing reaches past the mark itself.
   const floorY = -1.58;
-  const shadowMat = new THREE.ShadowMaterial({ color: 0x07020f, opacity: 0.55 });
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), shadowMat);
+  const shadowMat = new THREE.MeshBasicMaterial({
+    map: glowTexture('rgba(4,1,10,0.85)', 'rgba(4,1,10,0.35)'),
+    transparent: true, depthWrite: false, opacity: 0.55,
+  });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 2.2), shadowMat);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = floorY;
-  floor.receiveShadow = true;
+  floor.position.set(0.05, floorY + 0.002, 0.1);
   rig.add(floor);
   const glowMat = new THREE.MeshBasicMaterial({
     map: glowTexture('rgba(150,92,255,0.95)', 'rgba(110,50,230,0.32)'),
@@ -143,8 +139,13 @@ export function createScene(canvas, opts = {}) {
   const state = { floor: 1, dim: 0, pulse: 0 };
 
   let dprCap = opts.maxDpr || 1.5;
+  // Pixel budget: the canvas is full-screen, so on large or high-density
+  // screens resolution is capped by total pixels (about one 1080p frame).
+  // Measured: this alone took slow frames at 1920x1080@1.5x from 52 to 9.
+  const BUDGET = 2.2e6;
   function resize(w, h, dpr) {
-    renderer.setPixelRatio(Math.min(dpr || window.devicePixelRatio || 1, dprCap));
+    const fit = Math.sqrt(BUDGET / Math.max(w * h, 1));
+    renderer.setPixelRatio(Math.max(0.75, Math.min(dpr || window.devicePixelRatio || 1, dprCap, fit)));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -195,13 +196,12 @@ export function createScene(canvas, opts = {}) {
     renderer.render(scene, camera);
   }
 
-  /* Quality steps for slower GPUs: 0 full, 1 lower resolution, 2 no shadows. */
+  /* Quality steps for slower GPUs: 0 full, 1 lower resolution, 2 lowest
+     resolution and no clearcoat. */
   function setQuality(level, w, h) {
-    dprCap = level >= 1 ? 1 : (opts.maxDpr || 1.5);
-    renderer.shadowMap.enabled = level < 2;
-    key.castShadow = level < 2;
+    dprCap = level >= 2 ? 0.85 : level >= 1 ? 1 : (opts.maxDpr || 1.5);
+    material.clearcoat = level >= 2 ? 0 : 0.35;
     material.needsUpdate = true;
-    shadowMat.needsUpdate = true;
     resize(w, h);
   }
 

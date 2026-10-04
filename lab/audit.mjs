@@ -2,6 +2,7 @@
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 const URL = 'http://localhost:4500/';
+const PAGES = ['', 'work/websites.html', 'work/apps.html', 'work/design.html'];
 const axeSrc = fs.readFileSync('node_modules/axe-core/axe.min.js', 'utf8');
 const out = [];
 const log = (...a) => { out.push(a.join(' ')); console.log(...a); };
@@ -67,10 +68,7 @@ async function run(name, ctxOpts, launchArgs) {
   await p.keyboard.press('Enter'); await p.waitForTimeout(500);
   const closed = await p.evaluate(() => !document.querySelector('.faq details').open);
   log('[faq keyboard] opens:', opened, 'closes:', closed);
-  // picks -> tray -> chips
-  await p.evaluate(() => { document.querySelector('[data-pick="Websites"]').click(); document.querySelector('[data-pick="Product design"]').click(); });
-  await p.waitForTimeout(300);
-  log('[brief]', JSON.stringify(await p.evaluate(() => ({ tray: !document.querySelector('.tray').hidden, trayText: document.querySelector('.tray__text').textContent, chips: [...document.querySelectorAll('.brief input:checked')].map(i => i.value) }))));
+  log('[demo]', JSON.stringify(await p.evaluate(() => [...document.querySelectorAll('[data-demo]')].length)));
   // axe at several positions (content is scroll-revealed)
   await p.addScriptTag({ content: axeSrc });
   const H = await p.evaluate(() => document.documentElement.scrollHeight / innerHeight);
@@ -83,6 +81,32 @@ async function run(name, ctxOpts, launchArgs) {
   log('[axe]', seen.size ? JSON.stringify([...seen.values()], null, 1) : 'no violations');
   await ctx.close();
 }
+// 1b. every work page: requests, console, overflow, links, axe
+for (const pg of PAGES.slice(1)) {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage(); const msgs = [], bad = [];
+  p.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') msgs.push(m.text()); });
+  p.on('pageerror', e => msgs.push('pageerror: ' + e.message));
+  p.on('response', r => { if (r.status() >= 400) bad.push(r.status() + ' ' + r.url()); });
+  await p.goto(URL + pg, { waitUntil: 'networkidle' });
+  const H = await p.evaluate(() => document.documentElement.scrollHeight);
+  let ov = 0; for (let y = 0; y < H; y += 450) { await p.evaluate(v => scrollTo(0, v), y); await p.waitForTimeout(90); ov = Math.max(ov, await p.evaluate(() => document.documentElement.scrollWidth - innerWidth)); }
+  await p.waitForTimeout(600);
+  const links = await p.evaluate(() => [...document.querySelectorAll('a[href]')].map(a => a.href).filter(h => h.startsWith(location.origin)));
+  const broken = [];
+  for (const l of [...new Set(links)]) { const r = await p.request.get(l.split('#')[0]); if (r.status() >= 400) broken.push(r.status() + ' ' + l); }
+  const dom = await p.evaluate(() => ({ h1: document.querySelectorAll('h1').length, imgsNoAlt: [...document.querySelectorAll('img')].filter(i => !i.hasAttribute('alt')).length, dupIds: (() => { const ids = [...document.querySelectorAll('[id]')].map(e => e.id); return ids.filter((x, i) => ids.indexOf(x) !== i); })(), home: !!document.querySelector('.nav__home') }));
+  await p.addScriptTag({ content: axeSrc });
+  const v = await p.evaluate(async () => (await axe.run(document, { resultTypes: ['violations'] })).violations.map(v => v.id + ' x' + v.nodes.length + ' :: ' + v.nodes[0].target.join(' ')));
+  log(`[${pg}] overflow ${ov}px | bad requests ${bad.length ? bad.join(', ') : 'none'} | broken links ${broken.length ? broken.join(', ') : 'none'} | console ${msgs.length ? msgs.join(' / ') : 'clean'} | dom ${JSON.stringify(dom)} | axe ${v.length ? v.join(' ; ') : 'clean'}`);
+  await ctx.close();
+}
+for (const pg of PAGES.slice(1)) { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const p = await ctx.newPage(); await p.goto(URL + pg, { waitUntil: 'networkidle' });
+  const H = await p.evaluate(() => document.documentElement.scrollHeight);
+  let ov = 0; for (let y = 0; y < H; y += 450) { await p.evaluate(v => scrollTo(0, v), y); await p.waitForTimeout(60); ov = Math.max(ov, await p.evaluate(() => document.documentElement.scrollWidth - innerWidth)); }
+  log(`[${pg} phone 390] overflow ${ov}px`); await ctx.close(); }
+
 // 2. other modes
 for (const [w, h] of [[1920, 1080], [1280, 720], [1024, 768], [768, 1024]]) { const r = await run(`desktop ${w}x${h}`, { viewport: { width: w, height: h } }); await r.ctx.close(); }
 { const r = await run('phone 390', { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 }); await r.ctx.close(); }
@@ -93,7 +117,7 @@ for (const [w, h] of [[1920, 1080], [1280, 720], [1024, 768], [768, 1024]]) { co
 // 3. no JavaScript: content and form must survive
 { const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, javaScriptEnabled: false });
   const p = await ctx.newPage(); await p.goto(URL); await p.waitForTimeout(500);
-  log('[no JS]', JSON.stringify(await p.evaluate(() => ({ form: document.getElementById('brief').getAttribute('method') + ' ' + document.getElementById('brief').getAttribute('action'), h1: document.querySelector('h1').innerText, faqItems: document.querySelectorAll('details').length }))));
+  log('[no JS]', JSON.stringify(await p.evaluate(() => ({ demoOptions: [...document.querySelectorAll('#start .demo__opt')].map(a => a.getAttribute('href')), h1: document.querySelector('h1').innerText, faqItems: document.querySelectorAll('details').length, workLinks: document.querySelectorAll('.wrow').length }))));
   await ctx.close(); }
 await browser.close();
 fs.writeFileSync('lab/audit.txt', out.join('\n'));

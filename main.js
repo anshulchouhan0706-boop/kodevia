@@ -4,8 +4,8 @@
      and close,
    - the leader-line tags, laid out beside the mark so they never overlap it,
    - the pointer tug on the finished mark,
-   - the brief: services picked on the rail carry into the close form,
-   - small interactions: brief tray, card spotlight, FAQ.
+   - the Book a free demo popovers (call, WhatsApp, email),
+   - small interactions: work preview, timeline, card spotlight, FAQ.
 
    Performance rules this file keeps:
    - one rAF loop for the scene; it sleeps when nothing is on screen,
@@ -37,64 +37,92 @@ function setVar(el, name, v, digits = 3) {
   el.style.setProperty(name, s);
 }
 
-/* ---------------------------------------------------------------- brief -- */
-(function brief() {
-  const picks = [...document.querySelectorAll('[data-pick]')];
-  const chips = [...document.querySelectorAll('.brief input[name="need"]')];
-  const tray = document.querySelector('.tray');
-  const trayText = tray && tray.querySelector('.tray__text');
-  let chosen = new Set();
-  try { chosen = new Set(JSON.parse(sessionStorage.getItem('kodevia-brief') || '[]')); } catch (e) { /* storage blocked */ }
-  const sync = () => {
-    picks.forEach((b) => {
-      const on = chosen.has(b.dataset.pick);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-      const card = b.closest('.svc');
-      if (card) card.classList.toggle('is-picked', on);
-    });
-    chips.forEach((c) => { c.checked = chosen.has(c.value); });
-    if (tray) {
-      const n = chosen.size;
-      tray.classList.toggle('is-on', n > 0);
-      tray.hidden = n === 0;
-      tray.setAttribute('aria-label', 'Review your brief');
-      trayText.textContent = n === 1 ? '1 service in your brief' : n + ' services in your brief';
-    }
-    try { sessionStorage.setItem('kodevia-brief', JSON.stringify([...chosen])); } catch (e) { /* storage blocked */ }
+/* ---------------------------------------------------------------- demo -- */
+// Every "Book a free demo" button opens the same three options: call,
+// WhatsApp, email. Contact details live on <body> as data attributes.
+(function demo() {
+  const { phone, whatsapp, email } = document.body.dataset;
+  const msg = 'Hi Kodevia, I would like to book a free demo.';
+  const boxes = [...document.querySelectorAll('[data-demo]')];
+  const close = (box, focus) => {
+    if (!box.classList.contains('is-open')) return;
+    box.classList.remove('is-open');
+    box.querySelector('.demo__btn').setAttribute('aria-expanded', 'false');
+    if (focus) box.querySelector('.demo__btn').focus();
   };
-  picks.forEach((b) => b.addEventListener('click', () => {
-    const v = b.dataset.pick;
-    chosen.has(v) ? chosen.delete(v) : chosen.add(v);
-    sync();
-    b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop');
-  }));
-  chips.forEach((c) => c.addEventListener('change', () => {
-    c.checked ? chosen.add(c.value) : chosen.delete(c.value);
-    sync();
-  }));
-  sync();
-  // The tray steps aside once the brief itself is on screen.
-  if (tray) new IntersectionObserver(([e]) => tray.classList.toggle('is-away', e.isIntersecting), { threshold: 0.3 })
-    .observe(document.getElementById('start'));
-
-  const form = document.getElementById('brief');
-  const note = document.getElementById('brief-note');
-  const to = form.getAttribute('action').replace(/^mailto:/, '');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const idea = form.idea.value.trim();
-    if (!idea) { form.idea.focus(); note.textContent = 'Add a line about what you are building first.'; return; }
-    const needs = [...chosen];
-    const body = [
-      'What we need: ' + (needs.length ? needs.join(', ') : 'Not sure yet'),
-      '',
-      'What we are building:',
-      idea,
-    ].join('\n');
-    const subject = 'New project' + (needs.length ? ': ' + needs.join(', ') : '');
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    note.textContent = 'Your email app should open with the brief. Send it from there and we will reply.';
+  boxes.forEach((box) => {
+    const btn = box.querySelector('.demo__btn');
+    const opts = [...box.querySelectorAll('.demo__opt')];
+    box.querySelector('[data-kind="call"]').href = 'tel:' + phone;
+    box.querySelector('[data-kind="whatsapp"]').href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
+    box.querySelector('[data-kind="email"]').href = 'mailto:' + email + '?subject=' + encodeURIComponent('Free demo request') + '&body=' + encodeURIComponent(msg);
+    box.classList.add('is-ready');
+    btn.setAttribute('role', 'button');
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const open = !box.classList.contains('is-open');
+      boxes.forEach((o) => o !== box && close(o));
+      box.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    box.addEventListener('keydown', (e) => {
+      const i = opts.indexOf(document.activeElement);
+      if (e.key === 'Escape') close(box, true);
+      else if (e.key === 'ArrowDown' && box.classList.contains('is-open')) { e.preventDefault(); (opts[i + 1] || opts[0]).focus(); }
+      else if (e.key === 'ArrowUp' && box.classList.contains('is-open')) { e.preventDefault(); (opts[i - 1] || opts[opts.length - 1]).focus(); }
+    });
+    box.addEventListener('focusout', (e) => { if (!box.contains(e.relatedTarget)) close(box); });
   });
+  document.addEventListener('click', (e) => boxes.forEach((b) => !b.contains(e.target) && close(b)));
+})();
+
+/* ---------------------------------------------------------------- work -- */
+// Our work: hovering or focusing a category swaps the preview stage. Until
+// the visitor touches it, the stage turns over on its own, slowly.
+(function work() {
+  const rows = [...document.querySelectorAll('.wrow')];
+  const scenes = [...document.querySelectorAll('.wscene')];
+  if (!rows.length) return;
+  let i = 0, held = false;
+  const show = (k) => {
+    i = k;
+    rows.forEach((r, j) => r.classList.toggle('is-on', j === k));
+    scenes.forEach((sc) => sc.classList.toggle('is-on', sc.dataset.scene === rows[k].dataset.show));
+  };
+  rows.forEach((r, k) => {
+    r.addEventListener('pointerenter', () => { held = true; show(k); });
+    r.addEventListener('focus', () => { held = true; show(k); });
+  });
+  document.querySelector('.wlist').addEventListener('pointerleave', () => { held = false; });
+  if (!reduce) setInterval(() => { if (!held && !document.hidden) show((i + 1) % rows.length); }, 3600);
+})();
+
+// Process timeline: the track fills as the section passes; each stage lights
+// when the fill reaches it.
+(function timeline() {
+  const tl = document.querySelector('.tl');
+  if (!tl) return;
+  const steps = [...tl.querySelectorAll('.tl__step')];
+  let on = false;
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); }).observe(tl);
+  function tick() {
+    if (!on) return;
+    const r = tl.getBoundingClientRect();
+    const p = reduce ? 1 : clamp01((innerHeight * 0.82 - r.top) / (innerHeight * 0.55));
+    setVar(tl, '--fill', p);
+    steps.forEach((st, k) => st.classList.toggle('is-lit', p >= k / (steps.length - 1) - 0.02));
+    requestAnimationFrame(tick);
+  }
+})();
+
+// Header: transparent over the hero, a clean solid bar once the page moves,
+// instead of a dark gradient that slid over content.
+(function bar() {
+  const bar = document.querySelector('.bar');
+  let on = null;
+  const check = () => { const v = scrollY > 24; if (v !== on) { on = v; bar.classList.toggle('is-solid', v); } };
+  addEventListener('scroll', check, { passive: true });
+  check();
 })();
 
 /* ------------------------------------------------------ small interactions -- */
@@ -128,10 +156,11 @@ document.querySelectorAll('.faq details').forEach((d) => {
 document.addEventListener('focusin', (e) => {
   const el = e.target;
   if (!(el instanceof Element)) return;
-  const pending = el.closest('[data-sc-in]:not(.sc-in)');
-  if (pending) {
-    pending.classList.add('sc-in');
-    [...pending.children].forEach((k) => k.classList.add('sc-in'));
+  // Anything inside a reveal that has not fully landed is shown at once:
+  // a keyboard user should never wait on a fade to read what they focused.
+  const block = el.closest('[data-sc-in]');
+  if (block) {
+    [block, ...block.children].forEach((k) => { k.style.transition = 'none'; k.style.transitionDelay = '0ms'; k.classList.add('sc-in'); });
   }
   const card = el.closest('.rail > *');
   if (card) {
@@ -146,27 +175,63 @@ document.addEventListener('focusin', (e) => {
   }
 });
 
-// Rail settle: cards arrive in sequence while the rail travels. Runs only
-// while the rail is on screen.
-(function railSettle() {
-  if (reduce) return;
+// Rail: cards settle in sequence while the rail travels, and a wire runs
+// through the cards, drawing itself as you go. Positions are measured on
+// resize; per frame only the rail's own transform is read (no layout).
+(function rail() {
   const act = document.getElementById('services');
+  const railEl = act.querySelector('.rail');
   const cards = [...act.querySelectorAll('.svc')];
-  let on = false;
-  new IntersectionObserver(([e]) => {
-    on = e.isIntersecting;
-    if (on) requestAnimationFrame(tick);
-  }).observe(act);
+  const wire = railEl.querySelector('.rail__wire');
+  const base = wire.querySelector('.rail__wire-base');
+  const glow = wire.querySelector('.rail__wire-glow');
+  const head = wire.querySelector('.rail__wire-head');
+  let pts = [], lefts = [], len = 1, on = false;
+  function measure() {
+    const W = railEl.scrollWidth, H = railEl.offsetHeight;
+    wire.setAttribute('width', W); wire.setAttribute('height', H);
+    wire.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    lefts = cards.map((c) => c.offsetLeft);
+    // the wire runs along the floor under the cards, rising to touch each one
+    const lead = railEl.querySelector('.rail__lead');
+    const floor = cards[0] ? cards[0].offsetTop + cards[0].offsetHeight + 34 : H / 2;
+    const touch = floor - 34;
+    pts = [[lead.offsetLeft + 4, floor]].concat(cards.map((c) => [c.offsetLeft + c.offsetWidth / 2, touch]), [[W - 40, floor]]);
+    let d = `M ${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+      const mx = (x0 + x1) / 2;
+      d += ` C ${mx} ${y0}, ${mx} ${floor + 22}, ${(x0 + x1) / 2} ${floor + 22} S ${x1} ${y1}, ${x1} ${y1}`;
+    }
+    base.setAttribute('d', d); glow.setAttribute('d', d);
+    len = glow.getTotalLength();
+    glow.style.strokeDasharray = len;
+    act.style.setProperty('--wire-y', floor + 'px');
+  }
+  addEventListener('resize', measure);
+  if (document.fonts) document.fonts.ready.then(measure);
+  setTimeout(measure, 300);
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) { measure(); requestAnimationFrame(tick); } }).observe(act);
   function tick() {
     if (!on) return;
+    const tx = parseFloat((railEl.style.transform.match(/-?[\d.]+/) || [0])[0]) || 0;
     const w = innerWidth;
-    for (const c of cards) {
-      const left = c.getBoundingClientRect().left;
-      setVar(c, '--settle', easeOut(clamp01((w * 1.02 - left) / (w * 0.32))));
-    }
+    // how far the wire has drawn: up to the middle of the screen
+    const reach = Math.max(0, Math.min(len, (w * 0.55 - tx)));
+    const frac = reach / (railEl.scrollWidth || 1);
+    glow.style.strokeDashoffset = (len * (1 - frac)).toFixed(1);
+    const pt = glow.getPointAtLength(len * frac);
+    head.setAttribute('cx', pt.x.toFixed(1)); head.setAttribute('cy', pt.y.toFixed(1));
+    cards.forEach((c, i) => {
+      const left = lefts[i] + tx;
+      if (!reduce) setVar(c, '--settle', easeOut(clamp01((w * 1.02 - left) / (w * 0.32))));
+      c.classList.toggle('is-wired', lefts[i] + c.offsetWidth / 2 <= reach + 1);
+    });
     requestAnimationFrame(tick);
   }
 })();
+
+
 
 /* --------------------------------------------------------------- scene -- */
 function hasWebGL() {
@@ -182,8 +247,10 @@ const els = {
   asm: document.getElementById('assemble'),
   start: document.getElementById('start'),
   tags: [...document.querySelectorAll('.tag')],
-  lines: [...document.querySelectorAll('.leaders line')],
-  dots: [...document.querySelectorAll('.leaders circle')],
+  leads: [...document.querySelectorAll('.leaders .lead')].map((g) => ({
+    g, base: g.querySelector('.lead__base'), flow: g.querySelector('.lead__flow'),
+    ring: g.querySelector('.lead__ring'), dot: g.querySelector('.lead__dot'),
+  })),
   list: [...document.querySelectorAll('.assemble__list li')],
   listEl: document.querySelector('.assemble__list'),
   far: document.querySelector('.far'),
@@ -261,7 +328,7 @@ function target(y) {
       o.sceneO = 1 - span(o.slidePx, vh * 0.15, vh * 0.75);
     }
     if (y > startPin - vh) {
-      // The close: the finished mark returns, resting beside the brief.
+      // The close: the finished mark returns, resting beside the demo booking.
       const into = startPin - y;
       const k = 1 - span(into, 0, vh * 0.9);
       const short = vh < 700;
@@ -283,7 +350,7 @@ async function boot() {
   const root = document.documentElement;
   if (!hasWebGL()) { root.classList.add('no-webgl', 'tags-compact'); return; }
   let mod;
-  try { mod = await import('./kscene.js'); } catch (e) { root.classList.add('no-webgl', 'tags-compact'); return; }
+  try { mod = await import('./kscene.js?v=4'); } catch (e) { root.classList.add('no-webgl', 'tags-compact'); return; }
   const { createScene, SCATTER_POSE } = mod;
   const canvas = document.getElementById('k');
   let S;
@@ -343,7 +410,7 @@ async function boot() {
     last = now;
     const y = scrollY;
     const tg = target(y);
-    const a = first || reduce ? 1 : damp(dt, 7.5);
+    const a = first || reduce ? 1 : damp(dt, 11);
     first = false;
     for (let i = 0; i < 3; i++) cur.t[i] = lerp(cur.t[i], tg.t[i], a);
     cur.spread = lerp(cur.spread, tg.spread, a);
@@ -452,8 +519,8 @@ async function boot() {
       const [a, b] = win[i];
       const on = compact ? 0 : span(pA, a + 0.02, a + (b - a) * 0.6) * out;
       setVar(el, 'opacity', on);
-      setVar(els.lines[i], 'opacity', on);
-      setVar(els.dots[i], 'opacity', on);
+      const L = els.leads[i];
+      setVar(L.g, 'opacity', on);
       if (on <= 0.001) return;
       const tip = S.project(i, W, H);
       const tw = geo.tagW[i], th = geo.tagH[i];
@@ -462,13 +529,15 @@ async function boot() {
       if (i === 2) ty = Math.max(ty, webY + geo.tagH[1] + 28);
       const tx = tagSide[i] === 'left' ? box.l - gap - tw : box.r + gap;
       el.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0)`;
+      // A soft S-curve from the label out to the piece, drawn as it arrives.
       const ax = tagSide[i] === 'left' ? tx + tw + 12 : tx - 12;
       const ay = ty + 18;
-      const prog = easeOut(on);
-      const ln = els.lines[i];
-      ln.setAttribute('x1', ax.toFixed(1)); ln.setAttribute('y1', ay.toFixed(1));
-      ln.setAttribute('x2', lerp(ax, tip.x, prog).toFixed(1)); ln.setAttribute('y2', lerp(ay, tip.y, prog).toFixed(1));
-      els.dots[i].setAttribute('cx', tip.x.toFixed(1)); els.dots[i].setAttribute('cy', tip.y.toFixed(1));
+      const mx = (ax + tip.x) / 2;
+      const d = `M ${ax.toFixed(1)} ${ay.toFixed(1)} C ${mx.toFixed(1)} ${ay.toFixed(1)}, ${mx.toFixed(1)} ${tip.y.toFixed(1)}, ${tip.x.toFixed(1)} ${tip.y.toFixed(1)}`;
+      L.base.setAttribute('d', d); L.flow.setAttribute('d', d);
+      setVar(L.base, 'stroke-dashoffset', 1 - easeOut(on));
+      L.ring.setAttribute('cx', tip.x.toFixed(1)); L.ring.setAttribute('cy', tip.y.toFixed(1));
+      L.dot.setAttribute('cx', tip.x.toFixed(1)); L.dot.setAttribute('cy', tip.y.toFixed(1));
     });
     // The list (phones and narrow screens) leaves before the closing line.
     if (els.listEl) setVar(els.listEl, 'opacity', tg.phase === 'asm' ? out : 0);
