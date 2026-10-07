@@ -1,0 +1,14 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => (m.type() === 'error' || m.type() === 'warning') && errs.push(m.text()));
+p.on('response', r => r.status() >= 400 && errs.push(r.status() + ' ' + r.url()));
+await p.goto('http://localhost:4500/', { waitUntil: 'networkidle' }); await p.waitForTimeout(1500);
+const shoot = async (sel, off, name) => { await p.evaluate(([s, o]) => { const e = document.querySelector(s); scrollTo(0, e.getBoundingClientRect().top + scrollY - innerHeight * o); }, [sel, off]); await p.waitForTimeout(1700); await p.screenshot({ path: `lab/r6-${name}.png` }); };
+await shoot('#assemble', -2.6, 'k');
+await shoot('#services', -1.25, 'svc');
+await shoot('.tools', 0.05, 'tools');
+await shoot('.why', 0.0, 'why');
+await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await p.waitForTimeout(1500); await p.screenshot({ path: 'lab/r6-foot.png' });
+console.log(errs.length ? errs.join('\n') : 'clean');
+await b.close();

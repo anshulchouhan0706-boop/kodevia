@@ -2,7 +2,7 @@
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 const URL = 'http://localhost:4500/';
-const PAGES = ['', 'work/websites.html', 'work/apps.html', 'work/design.html'];
+const PAGES = ['', 'work/websites.html', 'work/apps.html', 'work/design.html', 'blog/', 'blog/website-or-mobile-app-first.html', 'blog/what-decides-website-app-cost.html', 'blog/before-you-hire-a-web-development-company.html', 'blog/website-maintenance-explained.html'];
 const axeSrc = fs.readFileSync('node_modules/axe-core/axe.min.js', 'utf8');
 const out = [];
 const log = (...a) => { out.push(a.join(' ')); console.log(...a); };

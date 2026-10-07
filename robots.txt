@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /lab/
+
+Sitemap: https://anshulchouhan0706-boop.github.io/kodevia/sitemap.xml

@@ -40,7 +40,6 @@ if (lb) {
   const img = lb.querySelector('.lb__body img');
   const body = lb.querySelector('.lb__body');
   const title = lb.querySelector('.lb__title');
-  const count = lb.querySelector('.lb__count');
   let at = 0, opener = null;
   const show = (i) => {
     at = (i + items.length) % items.length;
@@ -49,7 +48,6 @@ if (lb) {
     body.classList.toggle('is-tall', it.dataset.shape === 'tall');
     body.scrollTop = 0;
     title.textContent = it.dataset.title;
-    count.textContent = (at + 1) + ' of ' + items.length;
   };
   items.forEach((it, i) => it.addEventListener('click', (e) => { e.preventDefault(); opener = it; show(i); lb.showModal(); }));
   lb.querySelector('[data-lb="prev"]').addEventListener('click', () => show(at - 1));
@@ -110,5 +108,11 @@ document.querySelectorAll('.chipc').forEach((c) => c.addEventListener('click', a
     box.addEventListener('focusout', (e) => { if (!box.contains(e.relatedTarget)) close(box); });
   });
   document.addEventListener('click', (e) => boxes.forEach((b) => !b.contains(e.target) && close(b)));
+  document.querySelectorAll('[data-contact]').forEach((a) => {
+    const k = a.dataset.contact;
+    if (k === 'email') { a.href = 'mailto:' + email; a.textContent = email; }
+    if (k === 'call') a.href = 'tel:' + phone;
+    if (k === 'whatsapp') a.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
+  });
 })();
 

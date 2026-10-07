@@ -5,7 +5,7 @@ const b = await chromium.launch({ executablePath: '/usr/bin/google-chrome', head
 const p = await b.newPage({ viewport: { width: +W, height: +H } });
 const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
 await p.goto('http://localhost:4500/' + (process.env.PAGE || ''), { waitUntil: 'networkidle' }); await p.waitForTimeout(700);
-await p.evaluate(([s, o]) => { const e = document.querySelector(s); scrollTo(0, e.getBoundingClientRect().top + scrollY - innerHeight * +o); }, [sel, off]);
+await p.evaluate(([s, o]) => { const e = document.querySelector(s); scrollTo({ top: e.getBoundingClientRect().top + scrollY - innerHeight * +o, behavior: 'instant' }); }, [sel, off]);
 await p.waitForTimeout(1600);
 if (process.env.HOVER) { const r = await p.evaluate(s => { const e = document.querySelector(s).getBoundingClientRect(); return [e.x + e.width / 2, e.y + e.height / 2]; }, process.env.HOVER); await p.mouse.move(r[0], r[1], { steps: 8 }); await p.waitForTimeout(900); }
 await p.screenshot({ path: out });

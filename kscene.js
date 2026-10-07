@@ -74,10 +74,17 @@ export function createScene(canvas, opts = {}) {
   const rim2 = new THREE.PointLight(0xc084fc, 26, 30, 1.6);
   rim2.position.set(-4, -1, -3);
   scene.add(rim2);
-  const fill = new THREE.HemisphereLight(0xe9d5ff, 0x1a0b33, 0.4);
+  // Ground colour is a mid lavender, not near-black: downward-facing surfaces
+  // (the underside of the leg) stay lit instead of reading as a shadow.
+  const fill = new THREE.HemisphereLight(0xe9d5ff, 0x7a5cc4, 0.55);
   scene.add(fill);
+  // Soft front fill from low right, so the underside of the leg stays lavender
+  // instead of falling into a dark band.
+  const front = new THREE.DirectionalLight(0xd8c2ff, 0.9);
+  front.position.set(3, -1.5, 8);
+  scene.add(front);
   const lights = [
-    [key, key.intensity], [rim, rim.intensity], [rim2, rim2.intensity], [fill, fill.intensity],
+    [key, key.intensity], [rim, rim.intensity], [rim2, rim2.intensity], [fill, fill.intensity], [front, front.intensity],
   ];
 
   const material = new THREE.MeshPhysicalMaterial({
@@ -108,7 +115,7 @@ export function createScene(canvas, opts = {}) {
 
   // Floor: a soft contact shadow plus a violet pool of light under the mark.
   // Both are small textured planes, so nothing reaches past the mark itself.
-  const floorY = -1.58;
+  const floorY = -1.72; // below the lowest point of every piece, so the glow never slices a capsule
   const shadowMat = new THREE.MeshBasicMaterial({
     map: glowTexture('rgba(4,1,10,0.85)', 'rgba(4,1,10,0.35)'),
     transparent: true, depthWrite: false, opacity: 0.55,
@@ -116,7 +123,9 @@ export function createScene(canvas, opts = {}) {
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 2.2), shadowMat);
   floor.rotation.x = -Math.PI / 2;
   floor.position.set(0.05, floorY + 0.002, 0.1);
-  rig.add(floor);
+  // Not added to the scene: the dark ellipse showed through around the leg and
+  // read as a shadow on it. The violet glow alone grounds the mark.
+  floor.visible = false;
   const glowMat = new THREE.MeshBasicMaterial({
     map: glowTexture('rgba(150,92,255,0.95)', 'rgba(110,50,230,0.32)'),
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,

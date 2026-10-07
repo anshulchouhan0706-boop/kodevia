@@ -74,6 +74,12 @@ function setVar(el, name, v, digits = 3) {
     box.addEventListener('focusout', (e) => { if (!box.contains(e.relatedTarget)) close(box); });
   });
   document.addEventListener('click', (e) => boxes.forEach((b) => !b.contains(e.target) && close(b)));
+  document.querySelectorAll('[data-contact]').forEach((a) => {
+    const k = a.dataset.contact;
+    if (k === 'email') { a.href = 'mailto:' + email; a.textContent = email; }
+    if (k === 'call') a.href = 'tel:' + phone;
+    if (k === 'whatsapp') a.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
+  });
 })();
 
 /* ---------------------------------------------------------------- work -- */
@@ -113,6 +119,14 @@ function setVar(el, name, v, digits = 3) {
     steps.forEach((st, k) => st.classList.toggle('is-lit', p >= k / (steps.length - 1) - 0.02));
     requestAnimationFrame(tick);
   }
+})();
+
+// Tools: rows fade in once the section is near, already moving, so the
+// first look is a full strip rather than a row filling up.
+(function tools() {
+  const t = document.querySelector('.tools');
+  if (!t) return;
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { t.classList.add('is-in'); o.disconnect(); } }, { rootMargin: '0px 0px 20% 0px' }).observe(t);
 })();
 
 // Header: transparent over the hero, a clean solid bar once the page moves,
@@ -175,57 +189,82 @@ document.addEventListener('focusin', (e) => {
   }
 });
 
-// Rail: cards settle in sequence while the rail travels, and a wire runs
-// through the cards, drawing itself as you go. Positions are measured on
-// resize; per frame only the rail's own transform is read (no layout).
+// Rail: cards settle in sequence while the rail travels, and a circuit wire
+// runs under the cards. The wire draws itself as the rail moves; light pulses
+// travel along it all the time; a node pulses where it meets each card.
+// Pulses, head and nodes are small HTML elements moved with transforms (GPU),
+// not SVG filters, so the wide SVG is never repainted per frame.
 (function rail() {
   const act = document.getElementById('services');
   const railEl = act.querySelector('.rail');
   const cards = [...act.querySelectorAll('.svc')];
   const wire = railEl.querySelector('.rail__wire');
   const base = wire.querySelector('.rail__wire-base');
+  const halo = wire.querySelector('.rail__wire-halo');
   const glow = wire.querySelector('.rail__wire-glow');
-  const head = wire.querySelector('.rail__wire-head');
-  let pts = [], lefts = [], len = 1, on = false;
+  const fx = railEl.querySelector('.rail__fx');
+  const pulses = [...fx.querySelectorAll('.rail__pulse')];
+  const head = fx.querySelector('.rail__head');
+  let lefts = [], len = 1, on = false, samples = [], nodes = [];
   function measure() {
     const W = railEl.scrollWidth, H = railEl.offsetHeight;
     wire.setAttribute('width', W); wire.setAttribute('height', H);
     wire.setAttribute('viewBox', `0 0 ${W} ${H}`);
     lefts = cards.map((c) => c.offsetLeft);
-    // the wire runs along the floor under the cards, rising to touch each one
     const lead = railEl.querySelector('.rail__lead');
     const floor = cards[0] ? cards[0].offsetTop + cards[0].offsetHeight + 34 : H / 2;
     const touch = floor - 34;
-    pts = [[lead.offsetLeft + 4, floor]].concat(cards.map((c) => [c.offsetLeft + c.offsetWidth / 2, touch]), [[W - 40, floor]]);
+    const pts = [[lead.offsetLeft + 4, floor]].concat(cards.map((c) => [c.offsetLeft + c.offsetWidth / 2, touch]), [[W - 40, floor]]);
     let d = `M ${pts[0][0]} ${pts[0][1]}`;
     for (let i = 1; i < pts.length; i++) {
       const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
       const mx = (x0 + x1) / 2;
-      d += ` C ${mx} ${y0}, ${mx} ${floor + 22}, ${(x0 + x1) / 2} ${floor + 22} S ${x1} ${y1}, ${x1} ${y1}`;
+      d += ` C ${mx} ${y0}, ${mx} ${floor + 22}, ${mx} ${floor + 22} S ${x1} ${y1}, ${x1} ${y1}`;
     }
-    base.setAttribute('d', d); glow.setAttribute('d', d);
+    [base, halo, glow].forEach((el) => el.setAttribute('d', d));
     len = glow.getTotalLength();
-    glow.style.strokeDasharray = len;
-    act.style.setProperty('--wire-y', floor + 'px');
+    glow.style.strokeDasharray = len; halo.style.strokeDasharray = len;
+    samples = [];
+    for (let i = 0; i <= 240; i++) { const pt = glow.getPointAtLength((len * i) / 240); samples.push([pt.x, pt.y]); }
+    nodes.forEach((n) => n.remove());
+    nodes = cards.map((c) => {
+      const n = document.createElement('i'); n.className = 'rail__node';
+      n.style.transform = `translate3d(${c.offsetLeft + c.offsetWidth / 2}px, ${touch}px, 0)`;
+      fx.appendChild(n); return n;
+    });
   }
   addEventListener('resize', measure);
   if (document.fonts) document.fonts.ready.then(measure);
   setTimeout(measure, 300);
-  new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) { measure(); requestAnimationFrame(tick); } }).observe(act);
-  function tick() {
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; act.classList.toggle('is-live', on); if (on) { measure(); requestAnimationFrame(tick); } }).observe(act);
+  const at = (f) => samples[Math.max(0, Math.min(samples.length - 1, Math.round(f * (samples.length - 1))))] || [0, 0];
+  let lastFrac = -1;
+  function tick(now) {
     if (!on) return;
     const tx = parseFloat((railEl.style.transform.match(/-?[\d.]+/) || [0])[0]) || 0;
     const w = innerWidth;
-    // how far the wire has drawn: up to the middle of the screen
     const reach = Math.max(0, Math.min(len, (w * 0.55 - tx)));
     const frac = reach / (railEl.scrollWidth || 1);
-    glow.style.strokeDashoffset = (len * (1 - frac)).toFixed(1);
-    const pt = glow.getPointAtLength(len * frac);
-    head.setAttribute('cx', pt.x.toFixed(1)); head.setAttribute('cy', pt.y.toFixed(1));
+    if (Math.abs(frac - lastFrac) > 0.0005) {
+      lastFrac = frac;
+      const off = (len * (1 - frac)).toFixed(1);
+      glow.style.strokeDashoffset = off; halo.style.strokeDashoffset = off;
+      const [hx, hy] = at(frac);
+      head.style.transform = `translate3d(${hx}px, ${hy}px, 0)`;
+    }
+    if (!reduce) {
+      pulses.forEach((p, k) => {
+        const f = ((now / 6500) + k * 0.5) % 1;
+        const [x, y] = at(f);
+        p.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      });
+    }
     cards.forEach((c, i) => {
       const left = lefts[i] + tx;
       if (!reduce) setVar(c, '--settle', easeOut(clamp01((w * 1.02 - left) / (w * 0.32))));
-      c.classList.toggle('is-wired', lefts[i] + c.offsetWidth / 2 <= reach + 1);
+      const wired = lefts[i] + c.offsetWidth / 2 <= reach + 1;
+      c.classList.toggle('is-wired', wired);
+      if (nodes[i]) nodes[i].classList.toggle('is-lit', wired);
     });
     requestAnimationFrame(tick);
   }
@@ -341,6 +380,13 @@ function target(y) {
       o.slidePx = -Math.max(0, into);
       o.sceneO = easeOut(k);
       o.phase = 'start';
+      // The footer follows the close: once the close unpins, the mark leaves
+      // with its stage instead of hanging over the footer.
+      const startUnpin = geo.start.top + geo.start.h - vh;
+      if (y > startUnpin) {
+        o.slidePx = y - startUnpin;
+        o.sceneO = 1 - span(o.slidePx, vh * 0.2, vh * 0.7);
+      }
     }
   }
   return o;
@@ -350,7 +396,7 @@ async function boot() {
   const root = document.documentElement;
   if (!hasWebGL()) { root.classList.add('no-webgl', 'tags-compact'); return; }
   let mod;
-  try { mod = await import('./kscene.js?v=4'); } catch (e) { root.classList.add('no-webgl', 'tags-compact'); return; }
+  try { mod = await import('./kscene.js?v=5'); } catch (e) { root.classList.add('no-webgl', 'tags-compact'); return; }
   const { createScene, SCATTER_POSE } = mod;
   const canvas = document.getElementById('k');
   let S;
