@@ -1195,3 +1195,21 @@ a.svc:focus-visible { outline: 2px solid var(--k-light); outline-offset: 4px; }
   /* The hero copy holds and scrolls away with the stage. */
   .pieces { min-height: 70svh; padding-block: var(--sc-7); }
 }
+
+/* ---- phones: Book a free demo sheet, quick and tappable ---------------- */
+@media (max-width: 860px) {
+  body > .demo__menu {
+    position: fixed; z-index: 95; top: auto; left: 0.75rem; right: 0.75rem; width: auto;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.5rem; border-radius: 22px; background: #17151E;
+    box-shadow: inset 0 0 0 1px rgb(192 132 252 / 0.3), 0 -20px 60px -10px rgb(0 0 0 / 0.85);
+    opacity: 0; visibility: hidden; transform: translateY(16px);
+    transition: opacity 140ms var(--sc-ease-out), transform 180ms var(--sc-ease-out), visibility 0s linear 180ms;
+  }
+  body > .demo__menu.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; animation: none; }
+  body > .demo__menu li, body > .demo__menu .demo__ic { opacity: 1; transform: none; animation: none !important; transition: none; }
+  body > .demo__menu .demo__opt { padding: 0.85rem 0.7rem; font-size: var(--sc-t-base); touch-action: manipulation; }
+  body > .demo__menu .demo__opt:active { background: rgb(139 92 246 / 0.22); }
+  .demo__btn { touch-action: manipulation; }
+}
+html[data-theme="light"] body > .demo__menu { background: #FFFFFF; }

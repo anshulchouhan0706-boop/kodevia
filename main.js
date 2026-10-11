@@ -44,49 +44,78 @@ function setVar(el, name, v, digits = 3) {
   const { phone, whatsapp, email } = document.body.dataset;
   const msg = 'Hi Kodevia, I would like to book a free demo.';
   const boxes = [...document.querySelectorAll('[data-demo]')];
+  // Phones: each menu is a bottom sheet. It lives directly under <body>, so no
+  // animated (transformed) ancestor can trap or clip its fixed position.
+  const phoneMQ = matchMedia('(max-width: 860px)');
+  const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
+  const menuOf = new Map(boxes.map((b) => [b, b.querySelector('.demo__menu')]));
+  const inBox = (box, n) => !!n && (box.contains(n) || menuOf.get(box).contains(n));
+  const place = () => menuOf.forEach((m, b) => {
+    if (phoneMQ.matches) { if (m.parentElement !== document.body) document.body.appendChild(m); }
+    else if (m.parentElement !== b) b.appendChild(m);
+  });
+  const setOpen = (box, open) => {
+    box.classList.toggle('is-open', open);
+    menuOf.get(box).classList.toggle('is-open', open);
+    box.querySelector('.demo__btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
   const close = (box, focus) => {
     if (!box.classList.contains('is-open')) return;
-    box.classList.remove('is-open');
-    box.querySelector('.demo__btn').setAttribute('aria-expanded', 'false');
+    setOpen(box, false);
     if (focus) box.querySelector('.demo__btn').focus();
   };
   boxes.forEach((box) => {
     const btn = box.querySelector('.demo__btn');
-    const opts = [...box.querySelectorAll('.demo__opt')];
-    box.querySelector('[data-kind="call"]').href = 'tel:' + phone;
-    box.querySelector('[data-kind="whatsapp"]').href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
-    box.querySelector('[data-kind="email"]').href = 'mailto:' + email + '?subject=' + encodeURIComponent('Free demo request') + '&body=' + encodeURIComponent(msg);
+    const menu = menuOf.get(box);
+    const opts = [...menu.querySelectorAll('.demo__opt')];
+    const wa = menu.querySelector('[data-kind="whatsapp"]');
+    menu.querySelector('[data-kind="call"]').href = 'tel:' + phone;
+    wa.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
+    // On phones, open WhatsApp in place: a new tab often stalls on a blank
+    // page instead of handing over to the app.
+    if (touch) wa.removeAttribute('target');
+    menu.querySelector('[data-kind="email"]').href = 'mailto:' + email + '?subject=' + encodeURIComponent('Free demo request') + '&body=' + encodeURIComponent(msg);
+    // Let the tap go through, then put the sheet away for when they return.
+    opts.forEach((o) => o.addEventListener('click', () => setTimeout(() => close(box), 300)));
     box.classList.add('is-ready');
     btn.setAttribute('role', 'button');
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const open = !box.classList.contains('is-open');
       boxes.forEach((o) => o !== box && close(o));
-      box.classList.toggle('is-open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      setOpen(box, open);
     });
     // Mouse users: the options pop out on hover, and stay while the pointer
     // is over the button or the menu. Click still works everywhere.
     if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
       let t = 0;
-      const show = () => { clearTimeout(t); boxes.forEach((o) => o !== box && close(o)); box.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); };
+      const show = () => { clearTimeout(t); boxes.forEach((o) => o !== box && close(o)); setOpen(box, true); };
       box.addEventListener('pointerenter', show);
       box.addEventListener('pointerleave', () => { clearTimeout(t); t = setTimeout(() => close(box), 260); });
     }
-    box.addEventListener('keydown', (e) => {
+    const keys = (e) => {
       const i = opts.indexOf(document.activeElement);
       if (e.key === 'Escape') close(box, true);
       else if (e.key === 'ArrowDown' && box.classList.contains('is-open')) { e.preventDefault(); (opts[i + 1] || opts[0]).focus(); }
       else if (e.key === 'ArrowUp' && box.classList.contains('is-open')) { e.preventDefault(); (opts[i - 1] || opts[opts.length - 1]).focus(); }
-    });
-    box.addEventListener('focusout', (e) => { if (!box.contains(e.relatedTarget)) close(box); });
+    };
+    box.addEventListener('keydown', keys);
+    menu.addEventListener('keydown', keys);
+    // Close when keyboard focus moves elsewhere. A tap on a phone blurs the
+    // button with no new focus target; that is not leaving, so it must not
+    // close the sheet under the finger (outside taps are handled below).
+    const out = (e) => { if (e.relatedTarget && !inBox(box, e.relatedTarget)) close(box); };
+    box.addEventListener('focusout', out);
+    menu.addEventListener('focusout', out);
   });
-  document.addEventListener('click', (e) => boxes.forEach((b) => !b.contains(e.target) && close(b)));
+  document.addEventListener('click', (e) => boxes.forEach((b) => !inBox(b, e.target) && close(b)));
+  place();
+  phoneMQ.addEventListener('change', place);
   document.querySelectorAll('[data-contact]').forEach((a) => {
     const k = a.dataset.contact;
     if (k === 'email') { a.href = 'mailto:' + email; a.textContent = email; }
     if (k === 'call') a.href = 'tel:' + phone;
-    if (k === 'whatsapp') a.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
+    if (k === 'whatsapp') { a.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg); if (touch) a.removeAttribute('target'); }
   });
 })();
 
@@ -532,7 +561,10 @@ async function boot() {
     const tg = target(y);
     const a = first || reduce ? 1 : damp(dt, 11);
     first = false;
-    for (let i = 0; i < 3; i++) cur.t[i] = lerp(cur.t[i], tg.t[i], a);
+    // Phones: the legs glide in more slowly, so a quick thumb flick still
+    // shows each one travelling into place instead of snapping.
+    const aT = first || reduce || geo.vw > 860 ? a : damp(dt, 4.5);
+    for (let i = 0; i < 3; i++) cur.t[i] = lerp(cur.t[i], tg.t[i], aT);
     cur.spread = lerp(cur.spread, tg.spread, a);
     cur.x = lerp(cur.x, tg.rig.x, a); cur.y = lerp(cur.y, tg.rig.y, a);
     cur.ry = lerp(cur.ry, tg.rig.ry, a); cur.rx = lerp(cur.rx, tg.rig.rx || 0, a);
