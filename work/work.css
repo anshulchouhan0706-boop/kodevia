@@ -192,3 +192,5 @@ body { background: var(--sc-canvas); overflow-x: hidden; }
 .webgrid .proj-card:last-child .proj { order: 2; }
 @media (max-width: 860px) { .webgrid .proj-card:last-child { grid-template-columns: 1fr; } .webgrid .proj-card:last-child .proj { order: 0; } }
 .swatches i { box-shadow: 0 0 0 2px #0A0A0B, 0 0 0 3px rgb(245 245 247 / 0.18); }
+/* reveal faster, so text is readable as soon as it arrives */
+.rv { transition-duration: 420ms, 520ms; }

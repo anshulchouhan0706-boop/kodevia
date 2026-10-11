@@ -19,9 +19,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "lab"))
 from blog_content import ARTICLES  # noqa: E402
+ARTICLES = sorted(ARTICLES, key=lambda a: a['date'], reverse=True)  # newest first
 
 SITE = "https://anshulchouhan0706-boop.github.io/kodevia"
-V = "6"
+V = "7"
 TODAY = date.today().isoformat()
 ARROW = '<svg class="btn__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11m-4-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 
@@ -113,10 +114,16 @@ def page(head_extra_css, main_html, blog_current=True):
     header = header.replace('<a href="./" data-nav="blog">', '<a href="./" data-nav="blog" aria-current="page">' if blog_current else '<a href="./" data-nav="blog">')
     foot = FOOT.replace('href="../work/', 'href="../work/')
     tail = TAIL.replace('src="work.js', 'src="../work/work.js')
+    head = head.replace('data-default-theme="dark"', 'data-default-theme="light"')
+    header = header.replace('<body ', '<body class="is-blog" ', 1) if 'is-blog' not in header else header
     return head + "</head>\n" + header + '<main id="main" class="wk">\n  <span id="top"></span>\n' + main_html + "\n</main>\n\n" + foot + tail
 
+def cover_path(a, size=""):
+    folder = "blog" if a["cover"].startswith("c-") else "work"
+    return f"assets/{folder}/{a['cover']}{size}.webp"
+
 def cover(a, size=""):
-    return f"../assets/work/{a['cover']}{size}.webp"
+    return "../" + cover_path(a, size)
 
 def nice_date(d): return date.fromisoformat(d).strftime("%-d %B %Y")
 
@@ -135,7 +142,7 @@ def article_html(a, others):
       <p class="post__lede rv" style="--d:120ms" itemprop="description">{esc(a['description'])}</p>
     </header>
     <figure class="post__cover rv" style="--d:180ms">
-      <img src="{cover(a)}" width="1600" height="900" alt="A Kodevia {a['cover'][2:].replace('-', ' ')} project" itemprop="image">
+      <img src="{cover(a)}" width="1600" height="900" alt="Screens from Kodevia projects" itemprop="image">
     </figure>
     <div class="post__body" itemprop="articleBody">{a['body']}
       <div class="post__cta">
@@ -152,8 +159,10 @@ def article_html(a, others):
 
 def index_html():
     f, rest = ARTICLES[0], ARTICLES[1:]
+    tags = sorted({a['tag'] for a in ARTICLES})
+    topics = "\n".join(f'      <button type="button" class="blog-filter__btn" aria-pressed="false" data-filter="{t}">{t}</button>' for t in tags)
     rows = "".join(f"""
-      <a class="post-row rv" href="{a['slug']}.html" style="--d:{i * 70}ms">
+      <a class="post-row rv" href="{a['slug']}.html" data-tag="{a['tag']}" style="--d:{min(i, 6) * 60}ms">
         <span class="post-row__img"><img src="{cover(a, '-sm')}" width="820" height="461" alt="" loading="lazy"></span>
         <span class="post-row__text">
           <span class="post-meta"><span class="post-tag">{a['tag']}</span><time datetime="{a['date']}">{nice_date(a['date'])}</time></span>
@@ -171,7 +180,11 @@ def index_html():
     <img class="wk-hero__mark" src="../assets/k-poster.webp?v={V}" width="900" height="900" alt="">
   </section>
   <section class="blog-list" aria-label="Articles">
-    <a class="post-feature rv" href="{f['slug']}.html">
+    <div class="blog-filter rv" role="group" aria-label="Filter articles by topic">
+      <button type="button" class="blog-filter__btn" aria-pressed="true" data-filter="all">All topics</button>
+{topics}
+    </div>
+    <a class="post-feature rv" href="{f['slug']}.html" data-tag="{f['tag']}">
       <span class="post-feature__img"><img src="{cover(f)}" width="1600" height="900" alt=""></span>
       <span class="post-feature__text">
         <span class="post-meta"><span class="post-tag">{f['tag']}</span><time datetime="{f['date']}">{nice_date(f['date'])}</time></span>
@@ -198,15 +211,16 @@ def build():
     (out / "index.html").write_text(bump(txt))
     # articles
     for a in ARTICLES:
-        others = [o for o in ARTICLES if o is not a][:3]
+        same = [o for o in ARTICLES if o is not a and o['tag'] == a['tag']]
+        others = (same + [o for o in ARTICLES if o is not a and o not in same])[:3]
         txt = page("", article_html(a, others))
         graph = [ORG, {"@type": "BlogPosting", "headline": a["title"], "description": a["description"],
-                       "datePublished": a["date"], "dateModified": a["date"], "image": f"{SITE}/assets/work/{a['cover']}.webp",
+                       "datePublished": a["date"], "dateModified": a["date"], "image": f"{SITE}/{cover_path(a)}",
                        "author": {"@id": f"{SITE}/#org"}, "publisher": {"@id": f"{SITE}/#org"},
                        "mainEntityOfPage": f"{SITE}/blog/{a['slug']}.html", "wordCount": words(a["body"]), "articleSection": a["tag"]},
                  crumbs([("Home", ""), ("Blog", "blog/"), (a["title"], f"blog/{a['slug']}.html")])]
         t = a.get("seo_title", a["title"])
-        txt = apply_seo(txt, seo_block(f"blog/{a['slug']}.html", f"{t} | Kodevia", a["description"], f"assets/work/{a['cover']}.webp", "article", graph), "../")
+        txt = apply_seo(txt, seo_block(f"blog/{a['slug']}.html", f"{t} | Kodevia", a["description"], cover_path(a), "article", graph), "../")
         txt = txt.replace('<meta property="og:locale" content="en_IN">', f'<meta property="og:locale" content="en_IN">\n<meta property="article:published_time" content="{a["date"]}">')
         (out / f"{a['slug']}.html").write_text(bump(txt))
 

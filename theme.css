@@ -1,0 +1,128 @@
+/* Kodevia light theme. Applied by html[data-theme="light"]; the header button
+   switches it and remembers the choice. Dark stays the brand default on the
+   home and work pages; the blog defaults to light. */
+
+/* ---- theme switch button (both themes) ---------------------------------- */
+.theme-toggle {
+  position: relative; display: inline-grid; place-items: center; flex: none;
+  width: 2.6rem; height: 2.6rem; margin-right: 0.6rem; border: 0; border-radius: 50%; cursor: pointer;
+  color: var(--sc-ink); background: rgb(245 245 247 / 0.06); box-shadow: inset 0 0 0 1px rgb(245 245 247 / 0.16);
+  transition: background-color 200ms var(--sc-ease-out), box-shadow 200ms var(--sc-ease-out), transform 160ms var(--sc-ease-out);
+}
+.theme-toggle:hover { box-shadow: inset 0 0 0 1px rgb(192 132 252 / 0.6); transform: rotate(-12deg); }
+.theme-toggle:focus-visible { outline: 2px solid var(--k-light); outline-offset: 3px; }
+.theme-toggle svg { position: absolute; width: 1.2rem; height: 1.2rem; transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 240ms var(--sc-ease-out); }
+.theme-toggle .i-sun { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+html[data-theme="light"] .theme-toggle .i-sun { opacity: 1; transform: none; }
+html[data-theme="light"] .theme-toggle .i-moon { opacity: 0; transform: rotate(90deg) scale(0.4); }
+.bar .theme-toggle { margin-left: auto; }
+.bar .nav + .theme-toggle { margin-left: 0; }
+@media (max-width: 860px) { .theme-toggle { width: 2.4rem; height: 2.4rem; margin-right: 0.4rem; } }
+
+/* ---- light tokens -------------------------------------------------------- */
+html[data-theme="light"] {
+  --sc-canvas: #F8F7FB;
+  --sc-surface: #FFFFFF;
+  --sc-ink: #17141F;
+  --sc-ink-soft: #57516A;
+  --k-light: #7C3AED;
+  --k-border: #E3E0EC;
+  --sc-hairline: rgb(23 20 31 / 0.1);
+  --sc-edge: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --sc-shadow-color: 260 30% 40%;
+  color-scheme: light;
+}
+html[data-theme="light"] body { background: var(--sc-canvas); color: var(--sc-ink); }
+html[data-theme="light"] ::selection { background: #DDD0FF; color: #17141F; }
+
+/* surfaces that were dark cards */
+html[data-theme="light"] :is(.svc, .why__item, .lead, .wstage, .wk-next a, .board, .post__body blockquote) {
+  background: #FFFFFF;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 0 0 1px #E6E2EF, 0 18px 40px -24px rgb(60 30 120 / 0.25);
+}
+html[data-theme="light"] .why__item--lead { background: radial-gradient(90% 70% at 70% 30%, #EFE7FF, #FFFFFF 70%); }
+html[data-theme="light"] .wstage { background: radial-gradient(90% 80% at 60% 30%, #E9DEFF, #F6F2FF 70%); }
+html[data-theme="light"] .svc__media { background: radial-gradient(120% 90% at 50% 100%, #E7DCFF, #F3EEFF 70%); }
+html[data-theme="light"] .lead::before { background: radial-gradient(60% 40% at 90% 0%, rgb(139 92 246 / 0.08), transparent 70%); }
+html[data-theme="light"] .wk-next a { background: radial-gradient(120% 140% at 100% 0%, #E9DEFF, #FFFFFF 60%); }
+
+/* header, menus, footer */
+html[data-theme="light"] .bar.is-solid, html[data-theme="light"] .wk .bar, html[data-theme="light"] body:not(:has(.hero)) .bar { background: rgb(255 255 255 / 0.94); box-shadow: 0 1px 0 #E6E2EF; }
+html[data-theme="light"] :is(.btn--bar, .btn--ghost, .theme-toggle, .svc__go, .pick, .wpanel__go, .post-feature__go, .nav__home) { background: #FFFFFF; color: var(--sc-ink); box-shadow: inset 0 0 0 1px #DCD7E8; }
+html[data-theme="light"] .nav__home[aria-current="page"] { background: #EFE8FF; box-shadow: inset 0 0 0 1px #C9B6FA; }
+html[data-theme="light"] .nav a, html[data-theme="light"] .foot__nav a { color: #57516A; }
+html[data-theme="light"] .nav a:hover, html[data-theme="light"] .nav a[aria-current="page"] { color: var(--sc-ink); }
+html[data-theme="light"] .demo__menu { background: #FFFFFF; box-shadow: 0 0 0 1px #E3DCF4, 0 24px 50px -16px rgb(60 30 120 / 0.35); }
+html[data-theme="light"] .demo__opt { color: var(--sc-ink); }
+html[data-theme="light"] .demo__opt:hover, html[data-theme="light"] .demo__opt:focus-visible { background: #F2ECFF; }
+html[data-theme="light"] .site-foot { background: #FFFFFF; border-top-color: #E6E2EF; }
+html[data-theme="light"] .site-foot__bottom { border-top-color: #EEEAF4; }
+html[data-theme="light"] .tray { background: #FFFFFF; color: var(--sc-ink); }
+
+/* lines, rows, chips */
+html[data-theme="light"] :is(.wlist, .wlist li, .post-list, .post-row, .faq__list details, .step, .post__cta) { border-color: #E3E0EC; }
+html[data-theme="light"] .wrow__n { color: rgb(23 20 31 / 0.35); }
+html[data-theme="light"] .wrow.is-on .wrow__n { color: var(--sc-ink); }
+html[data-theme="light"] .wrow__arrow, html[data-theme="light"] .post-row__go { color: var(--sc-ink); box-shadow: inset 0 0 0 1px #DCD7E8; }
+html[data-theme="light"] .wrow.is-on .wrow__arrow { color: #fff; }
+html[data-theme="light"] .tools { border-color: #E6E2EF; }
+html[data-theme="light"] .tools__row li { background: #FFFFFF; color: var(--sc-ink); box-shadow: inset 0 0 0 1px #E3DCF4; }
+html[data-theme="light"] .tl__track { background: #E3E0EC; }
+html[data-theme="light"] .tl__node { background: #FFFFFF; box-shadow: inset 0 0 0 1.5px #CFC8DE; }
+html[data-theme="light"] .tl__step h3 { color: rgb(23 20 31 / 0.45); }
+html[data-theme="light"] .tl__step.is-lit h3 { color: var(--sc-ink); }
+html[data-theme="light"] .faq__plus { box-shadow: inset 0 0 0 1px #DCD7E8; }
+html[data-theme="light"] .why__icon { background: #F1EAFF; color: #6D28D9; box-shadow: inset 0 0 0 1px #DDCCFB; }
+html[data-theme="light"] .rail__wire-base { stroke: rgb(23 20 31 / 0.14); }
+html[data-theme="light"] .rail__node { background: #FFFFFF; }
+html[data-theme="light"] .post-tag { color: #5B21B6; background: #F1EAFF; box-shadow: inset 0 0 0 1px #DDCCFB; }
+html[data-theme="light"] .ptags span, html[data-theme="light"] .wk-meta span, html[data-theme="light"] .wk-tabs a:not([aria-current]), html[data-theme="light"] .blog-filter__btn:not([aria-pressed="true"]) { color: #57516A; background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCD7E8; }
+html[data-theme="light"] .tag__name, html[data-theme="light"] .assemble__intro, html[data-theme="light"] .assemble__close h2 { color: var(--sc-ink); }
+html[data-theme="light"] .assemble__close .sc-body { color: #3F3A50; }
+
+/* form */
+html[data-theme="light"] .lf input, html[data-theme="light"] .lf select, html[data-theme="light"] .lf textarea { background-color: #FAF9FD; color: var(--sc-ink); box-shadow: inset 0 0 0 1px #D9D4E6; }
+html[data-theme="light"] .lf input:focus, html[data-theme="light"] .lf select:focus, html[data-theme="light"] .lf textarea:focus { background-color: #FFFFFF; box-shadow: inset 0 0 0 1.5px #7C3AED, 0 0 0 4px rgb(124 58 237 / 0.14); }
+html[data-theme="light"] .lf select option { background: #FFFFFF; color: #17141F; }
+html[data-theme="light"] .lf__cc { background: #F2EFF8; color: #57516A; box-shadow: inset 0 0 0 1px #D9D4E6; }
+html[data-theme="light"] .lf input::placeholder, html[data-theme="light"] .lf textarea::placeholder { color: #8C86A0; }
+html[data-theme="light"] .lf__err, html[data-theme="light"] .lead__status { color: #B91C1C; }
+
+/* backgrounds and decoration: calmer in light */
+html[data-theme="light"] .far__blob--a { background: radial-gradient(closest-side, rgb(139 92 246 / 0.22), transparent); }
+html[data-theme="light"] .far__blob--b { background: radial-gradient(closest-side, rgb(192 132 252 / 0.18), transparent); }
+html[data-theme="light"] .far__blob--c { background: radial-gradient(closest-side, rgb(167 139 250 / 0.14), transparent); }
+html[data-theme="light"] .far::after, html[data-theme="light"] .wk-bg::after, html[data-theme="light"] .wstage::after { opacity: 0.025; }
+html[data-theme="light"] .wk-bg span:nth-child(1) { background: radial-gradient(closest-side, rgb(139 92 246 / 0.14), transparent); }
+html[data-theme="light"] .wk-bg span:nth-child(2) { background: radial-gradient(closest-side, rgb(167 139 250 / 0.1), transparent); }
+html[data-theme="light"] .browser { background: #EEEBF4; box-shadow: 0 0 0 1px #E3DFEC, 0 30px 60px -34px rgb(60 30 120 / 0.4); }
+html[data-theme="light"] .browser__bar { background: #F4F2F8; }
+html[data-theme="light"] .browser__bar span { background: #FFFFFF; color: #6B6580; }
+html[data-theme="light"] .phone { background: linear-gradient(160deg, #2A2833, #121117); }
+html[data-theme="light"] .lb { background: #FFFFFF; color: var(--sc-ink); }
+html[data-theme="light"] .lb__btn { background: #F2EFF8; color: var(--sc-ink); }
+html[data-theme="light"] .lb__btn:hover { color: #fff; }
+html[data-theme="light"] .toast { background: #FFFFFF; color: var(--sc-ink); }
+html[data-theme="light"] [data-sc-progress] { box-shadow: none; }
+
+/* ---- the blog: white and simple ----------------------------------------- */
+html[data-theme="light"] .is-blog .wk-bg, html[data-theme="light"] .is-blog .wk-hero__mark { display: none; }
+html[data-theme="light"] .is-blog { --sc-canvas: #FFFFFF; background: #FFFFFF; }
+html[data-theme="light"] .is-blog .post__body { color: #2B2738; }
+html[data-theme="light"] .is-blog .post__body h2, html[data-theme="light"] .is-blog .post__body h3 { color: #17141F; }
+html[data-theme="light"] .is-blog .post__cover, html[data-theme="light"] .is-blog .post-feature__img, html[data-theme="light"] .is-blog .post-row__img { box-shadow: 0 0 0 1px #ECE9F2; }
+html[data-theme="light"] .is-blog .post__body blockquote { background: #F7F3FF; box-shadow: none; border-left: 0; }
+html[data-theme="light"] .is-blog .blog-hero h1 em { color: #6D28D9; }
+
+/* smooth colour change when switching themes */
+html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after { transition: background-color 380ms ease, color 380ms ease, border-color 380ms ease, box-shadow 380ms ease, fill 380ms ease, stroke 380ms ease !important; }
+
+/* The scroll engine paints the page ground per section (dark colours); in
+   light mode the ground is always light. */
+html[data-theme="light"] body { background: var(--sc-canvas) !important; }
+html[data-theme="light"] .hero__lede, html[data-theme="light"] .start__lede { color: var(--sc-ink-soft); }
+/* the engine writes --sc-canvas inline on <html>; in light mode ours wins */
+html[data-theme="light"] { --sc-canvas: #F8F7FB !important; }
+html[data-theme="light"] .is-blog { --sc-canvas: #FFFFFF !important; }
+html[data-theme="light"] .wrow__n { color: rgb(23 20 31 / 0.6); }
+html[data-theme="light"] .tl__step h3 { color: rgb(23 20 31 / 0.62); }

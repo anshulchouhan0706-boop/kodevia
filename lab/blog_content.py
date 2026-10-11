@@ -4,6 +4,353 @@
 
 ARTICLES = [
   {
+    "slug": "how-long-to-build-website-or-app",
+    "seo_title": "How Long Does It Take to Build a Website or App?",
+    "title": "How long does it take to build a website or app?",
+    "description": "What sets the timeline of a website or mobile app project, the stages it moves through, and how to keep yours on schedule.",
+    "date": "2026-10-06",
+    "cover": "c-design",
+    "tag": "Planning",
+    "body": """
+<p>"When can it go live?" is usually the second question after "how much?". The honest answer depends on scope, but the timeline is far more predictable once you know what each stage involves and what slows projects down.</p>
+
+<h2>The stages every project goes through</h2>
+<ol>
+  <li><strong>Discover.</strong> Understanding the business, the users and the must-have features. This sets the scope everything else depends on.</li>
+  <li><strong>Design.</strong> Flows and wireframes first, then a clickable prototype, then the final visual design.</li>
+  <li><strong>Build.</strong> Development in short rounds, with a staging link you can open and test as it grows.</li>
+  <li><strong>Test and launch.</strong> Checking every screen on real devices, fixing issues, going live, and for apps, store review.</li>
+</ol>
+
+<h2>What makes a project shorter</h2>
+<ul>
+  <li>A clear goal and a short must-have list for the first version</li>
+  <li>Content, photos and brand files ready at the start</li>
+  <li>One person who gives feedback and approves quickly</li>
+  <li>Using proven building blocks instead of inventing everything from scratch</li>
+</ul>
+
+<h2>What makes it longer</h2>
+<ul>
+  <li>New features added halfway through</li>
+  <li>Waiting on content, logins or approvals</li>
+  <li>Integrations with outside systems, such as payments, ERPs or delivery partners</li>
+  <li>Building for many platforms at once</li>
+  <li>App store reviews, which you do not control</li>
+</ul>
+
+<h2>Websites and apps are different</h2>
+<p>A marketing website with a handful of pages is usually the quickest kind of project. An online store, a booking system or a customer portal takes longer because every feature needs logic and testing. A mobile app adds device testing, store listings and review time on top of the build.</p>
+
+<h2>Launch small, then grow</h2>
+<p>The fastest route to a live product is a focused first version: the features that deliver your goal, done well. Everything on the nice-to-have list can follow in later rounds, guided by what real customers actually use.</p>
+
+<blockquote>Every Kodevia project starts with a timeline agreed at the end of Discover, before you commit to the build. Book a free demo and we will map yours out.</blockquote>
+""",
+  },
+  {
+    "slug": "wordpress-vs-custom-website",
+    "seo_title": "WordPress vs Custom Website: Which Is Right for You?",
+    "title": "WordPress or a custom-built website: which is right for your business?",
+    "description": "An honest comparison of WordPress and custom-built websites: cost, speed, security, flexibility and who each one suits.",
+    "date": "2026-10-03",
+    "cover": "w-food-light",
+    "tag": "Technology",
+    "body": """
+<p>Many business owners are told to "just use WordPress", while others are told it is outdated. Both can be right. The real question is what your website needs to do, now and in a couple of years.</p>
+
+<h2>What WordPress is good at</h2>
+<ul>
+  <li><strong>Content-heavy sites.</strong> Blogs, news and pages your team updates often.</li>
+  <li><strong>Familiar editing.</strong> Many people already know how to use its admin panel.</li>
+  <li><strong>Plugins.</strong> Contact forms, SEO tools and simple shops can be added quickly.</li>
+</ul>
+
+<h2>Where WordPress can struggle</h2>
+<ul>
+  <li><strong>Plugin overload.</strong> Each plugin adds code, which can slow pages and create security gaps if not kept updated.</li>
+  <li><strong>Custom features.</strong> Unusual booking rules, dashboards or customer portals often end up fighting the platform.</li>
+  <li><strong>Design limits.</strong> Off-the-shelf themes can make sites look alike unless the design is built properly.</li>
+</ul>
+
+<h2>What a custom-built website is good at</h2>
+<ul>
+  <li><strong>Speed.</strong> Only the code your site needs, so pages load fast.</li>
+  <li><strong>Unique design and interactions.</strong> The site can look and behave exactly as your brand needs.</li>
+  <li><strong>Custom features.</strong> Booking flows, calculators, portals and integrations built around your process.</li>
+  <li><strong>Security.</strong> A smaller attack surface than a site with many third-party plugins.</li>
+</ul>
+
+<h2>The trade-offs</h2>
+<p>A custom site usually needs more design and development time up front, and changes to structure need a developer. A good custom build solves this with a simple admin panel or headless content system, so your team can still edit text, images and posts themselves.</p>
+
+<h2>How to choose</h2>
+<ol>
+  <li>If your site is mainly pages and posts that change often, a well-built WordPress site can be a sensible choice.</li>
+  <li>If speed, a distinctive design or custom features drive your business, custom is usually the better long-term investment.</li>
+  <li>Either way, ask who will maintain it, how updates are handled, and who owns the code and hosting.</li>
+</ol>
+
+<blockquote>Not sure which fits? Tell us what your site needs to do on a free demo call and we will recommend the approach honestly, even if it is the simpler one.</blockquote>
+""",
+  },
+  {
+    "slug": "flutter-vs-react-native-vs-native",
+    "seo_title": "Flutter vs React Native vs Native: Which to Choose?",
+    "title": "Flutter, React Native or native: how should your app be built?",
+    "description": "A plain-language comparison of Flutter, React Native and fully native iOS and Android apps, and how to choose for your business app.",
+    "date": "2026-09-30",
+    "cover": "c-apps",
+    "tag": "Technology",
+    "body": """
+<p>When you plan a mobile app you will hear three options: Flutter, React Native, or fully native apps for iOS and Android. You do not need to become a developer to choose well. You need to know what each option means for cost, speed and the experience your customers get.</p>
+
+<h2>Cross-platform: one codebase, two apps</h2>
+<p><strong>Flutter</strong> (from Google) and <strong>React Native</strong> (from Meta) let one team write most of the app once and ship it to both iOS and Android. For the majority of business apps, such as ordering, booking, retail, loyalty and service apps, this is the efficient choice.</p>
+<ul>
+  <li>Usually faster to build and less costly than two separate native apps</li>
+  <li>One codebase to maintain, so updates reach both platforms together</li>
+  <li>Smooth, modern interfaces that feel at home on phones</li>
+</ul>
+
+<h3>Flutter or React Native?</h3>
+<p>Both are mature and used for large production apps. Flutter draws its own interface, which keeps designs pixel-consistent across devices. React Native uses each platform's native components and fits well when a team also works in React on the web. The right pick often depends on the team building and maintaining it.</p>
+
+<h2>Native: built separately for each platform</h2>
+<p>Native apps are written in Swift for iOS and Kotlin for Android. They make sense when an app leans heavily on device features or needs the very last bit of performance.</p>
+<ul>
+  <li>Advanced camera, audio, Bluetooth or background processing</li>
+  <li>Graphics-heavy or highly specialised apps</li>
+  <li>Products where the newest platform features must be adopted on day one</li>
+</ul>
+<p>The trade-off is two codebases, which means more build time and ongoing work.</p>
+
+<h2>Questions that decide it</h2>
+<ol>
+  <li>Does the app need unusual hardware or background features?</li>
+  <li>Do you need iOS and Android at launch, or one first?</li>
+  <li>Who will maintain it after launch?</li>
+  <li>Does it share logic with a website or web app?</li>
+</ol>
+
+<blockquote>We build apps for iOS and Android, cross-platform or fully native, and will tell you which one your app actually needs. Book a free demo to talk it through.</blockquote>
+""",
+  },
+  {
+    "slug": "get-your-business-found-on-google",
+    "seo_title": "How to Get Your Business Found on Google: SEO Basics",
+    "title": "How to get your business found on Google: SEO basics for small businesses",
+    "description": "The SEO basics that help small businesses appear on Google: Business Profile, local search, page speed, content and technical setup.",
+    "date": "2026-09-27",
+    "cover": "w-realestate",
+    "tag": "SEO",
+    "body": """
+<p>A beautiful website only helps if people can find it. Search engine optimisation (SEO) sounds technical, but the basics that matter most for a small business are practical and within reach.</p>
+
+<h2>1. Claim your Google Business Profile</h2>
+<p>For local businesses this is often the single most important step. A complete, verified profile with the right category, hours, photos, phone number and website link helps you show up in Maps and local results. Ask happy customers to leave reviews and reply to them.</p>
+
+<h2>2. Make every page about one clear topic</h2>
+<p>Search engines match pages to what people type. Give each service its own page, with a clear heading and a title that uses the words customers actually search for, such as "website design in Indore" rather than a slogan.</p>
+
+<h2>3. Write titles and descriptions for people</h2>
+<p>The page title and meta description are what appear in search results. Keep the title short and specific and the description helpful. They are your advert in the results page.</p>
+
+<h2>4. Be fast and mobile-friendly</h2>
+<p>Most searches happen on phones. Pages that load quickly and work well on small screens give visitors a better experience, and search engines take page experience into account.</p>
+
+<h2>5. Get the technical basics right</h2>
+<ul>
+  <li>A sitemap submitted in Google Search Console</li>
+  <li>HTTPS on every page</li>
+  <li>Clean, readable addresses for each page</li>
+  <li>Structured data that describes your business, services and FAQs</li>
+  <li>Descriptive alt text on images</li>
+</ul>
+
+<h2>6. Publish genuinely useful content</h2>
+<p>Answer the questions your customers ask before they buy, in plain language. Helpful articles earn visits, links and trust over time.</p>
+
+<h2>Be patient, and measure</h2>
+<p>SEO builds over weeks and months, not days. Google Search Console shows which searches bring people to your site, so you can see what is working and improve the rest.</p>
+
+<blockquote>Every website Kodevia builds ships with the technical SEO basics in place: titles, descriptions, sitemap, structured data and fast pages. Book a free demo to see how.</blockquote>
+""",
+  },
+  {
+    "slug": "shopify-vs-custom-ecommerce",
+    "seo_title": "Shopify vs Custom E-commerce Website: Which to Choose",
+    "title": "Shopify or a custom e-commerce website: which should you choose?",
+    "description": "Comparing Shopify and a custom-built online store on cost, control, fees, design and growth, to help you choose the right e-commerce setup.",
+    "date": "2026-09-20",
+    "cover": "c-shop",
+    "tag": "E-commerce",
+    "body": """
+<p>If you want to sell online, the first big decision is the platform. Hosted platforms like Shopify get you selling quickly. A custom-built store gives you full control. Here is how to weigh them.</p>
+
+<h2>Why businesses choose Shopify</h2>
+<ul>
+  <li><strong>Speed to launch.</strong> Products, payments and checkout work out of the box.</li>
+  <li><strong>Hosting and security handled.</strong> The platform looks after servers and core updates.</li>
+  <li><strong>Apps.</strong> Reviews, shipping, discounts and marketing tools can be added.</li>
+</ul>
+
+<h2>The limits to know about</h2>
+<ul>
+  <li><strong>Ongoing costs.</strong> A monthly subscription, possible transaction fees and paid apps add up over time.</li>
+  <li><strong>Checkout and data rules.</strong> Some parts of the experience can only be customised within the platform's limits.</li>
+  <li><strong>Lookalike stores.</strong> Popular themes mean many shops share the same layout unless the design is customised.</li>
+</ul>
+
+<h2>Why businesses choose a custom store</h2>
+<ul>
+  <li><strong>A distinctive brand experience</strong> from home page to checkout.</li>
+  <li><strong>Custom rules</strong> such as B2B pricing, made-to-order products, subscriptions or local delivery zones.</li>
+  <li><strong>Direct integrations</strong> with your inventory, billing or delivery partners.</li>
+  <li><strong>No platform fees</strong> on top of your payment gateway.</li>
+</ul>
+<p>The trade-off is a larger initial build and responsibility for hosting, security and maintenance, usually handled by your development partner.</p>
+
+<h2>A simple way to decide</h2>
+<ol>
+  <li>Standard catalogue and standard checkout, and you want to start fast: a hosted platform is a sensible start.</li>
+  <li>Unusual products, pricing or operations, or a brand that must stand out: custom is usually worth it.</li>
+  <li>Planning a mobile app as well: a custom backend can serve the store and the app together.</li>
+</ol>
+
+<blockquote>Our e-commerce projects range from furniture and fashion stores to food ordering. Book a free demo and we will help you choose the right setup for your products.</blockquote>
+""",
+  },
+  {
+    "slug": "publish-app-on-play-store-and-app-store",
+    "seo_title": "How to Publish an App on Google Play and the App Store",
+    "title": "How to publish your app on Google Play and the App Store",
+    "description": "A step-by-step overview of publishing a mobile app on Google Play and Apple's App Store: accounts, listings, reviews and common rejection reasons.",
+    "date": "2026-09-13",
+    "cover": "c-stores",
+    "tag": "Apps",
+    "body": """
+<p>Building the app is only half the journey. To reach customers it has to pass review and be listed on Google Play and Apple's App Store. Here is what the process involves, so launch day has no surprises.</p>
+
+<h2>1. Developer accounts in your name</h2>
+<p>Each store requires a developer account: the Google Play Console and the Apple Developer Program. Apple charges a yearly fee and Google a one-time registration fee; check the current amounts on each site. Open the accounts in your company's name so you always own your app and its listing. Organisation accounts may need business verification, so start early.</p>
+
+<h2>2. Prepare the store listing</h2>
+<ul>
+  <li>App name, short and full description</li>
+  <li>Icon and screenshots for the required device sizes</li>
+  <li>Category, contact email and support website</li>
+  <li>A privacy policy page on your website</li>
+  <li>Data safety and privacy answers describing what data the app collects</li>
+</ul>
+
+<h2>3. Test before you submit</h2>
+<p>Use TestFlight on iOS and testing tracks on Google Play to share the app with real testers first. Depending on the type of account, Google may require a closed test with a minimum number of testers before you can publish to everyone.</p>
+
+<h2>4. Submit for review</h2>
+<p>Both stores review apps before they go live, and review times vary. Apple's review in particular checks the app against detailed guidelines.</p>
+
+<h2>Common reasons apps are rejected</h2>
+<ul>
+  <li>Crashes or broken features during review</li>
+  <li>Missing or vague privacy information</li>
+  <li>A login with no test account provided for the reviewer</li>
+  <li>Screenshots that do not match the app</li>
+  <li>An app that is only a website in a wrapper with no app-like value</li>
+</ul>
+
+<h2>5. After launch</h2>
+<p>Each year brings new iOS and Android versions and updated store policies. Apps need regular testing and updates to keep working and stay listed.</p>
+
+<blockquote>Kodevia handles store submission as part of every app launch, with accounts set up in your name. Book a free demo to plan your app's release.</blockquote>
+""",
+  },
+  {
+    "slug": "why-is-my-website-slow",
+    "seo_title": "Why Is My Website Slow? Causes and Fixes That Work",
+    "title": "Why is my website slow? The causes and the fixes that matter",
+    "description": "The most common reasons a website loads slowly, how to check your speed, and the practical fixes that make pages fast on mobile.",
+    "date": "2026-09-06",
+    "cover": "w-food-dark",
+    "tag": "Performance",
+    "body": """
+<p>Visitors leave slow websites, especially on mobile data. The good news is that most slow sites suffer from the same handful of problems, and most of them can be fixed.</p>
+
+<h2>How to check your speed</h2>
+<p>Run your pages through Google's PageSpeed Insights. It reports Core Web Vitals, the measures Google uses for page experience: how quickly the main content appears, how fast the page responds to a tap, and how much the layout jumps around while loading. Test on mobile, where most visitors are.</p>
+
+<h2>The usual causes</h2>
+<h3>Oversized images</h3>
+<p>Photos uploaded straight from a camera or phone can be many times larger than they need to be. This is the most common cause of slow pages.</p>
+<h3>Too many scripts and plugins</h3>
+<p>Every chat widget, tracker, slider and plugin adds code that the browser must download and run before the page settles.</p>
+<h3>Slow hosting</h3>
+<p>Cheap shared hosting can respond slowly, especially when traffic picks up.</p>
+<h3>Fonts and layout shifts</h3>
+<p>Heavy font files and images without set dimensions make text appear late and pages jump while loading.</p>
+
+<h2>The fixes that matter</h2>
+<ul>
+  <li><strong>Compress and resize images</strong> and use modern formats such as WebP.</li>
+  <li><strong>Lazy-load</strong> images further down the page.</li>
+  <li><strong>Remove what you do not use:</strong> old plugins, duplicate trackers, unused scripts.</li>
+  <li><strong>Use a CDN</strong> so files are served from near your visitors.</li>
+  <li><strong>Set image sizes</strong> so the layout does not jump.</li>
+  <li><strong>Choose hosting</strong> that matches your traffic.</li>
+</ul>
+
+<h2>Keep it fast</h2>
+<p>Speed is not a one-time job. New content and features slowly add weight. A quick speed check after each change, or as part of regular maintenance, keeps a fast site fast.</p>
+
+<blockquote>Performance is checked before every Kodevia release, not after launch. Book a free demo and we will look at your current site's speed with you.</blockquote>
+""",
+  },
+  {
+    "slug": "what-is-ui-ux-design",
+    "seo_title": "What Is UI/UX Design and Why It Matters for Sales",
+    "title": "What is UI/UX design, and why does it matter for your sales?",
+    "description": "UI and UX design explained in plain language: what each one means, what the design process involves, and how good design turns visitors into customers.",
+    "date": "2026-08-30",
+    "cover": "c-design",
+    "tag": "Design",
+    "body": """
+<p>You will hear "UI" and "UX" in almost every website or app conversation. They are related but different, and together they decide whether visitors understand your product and act, or leave.</p>
+
+<h2>UX: how it works</h2>
+<p>User experience (UX) design is about the journey: can people find what they need, understand it and complete a task without confusion? It covers the structure of pages, the steps in a checkout or booking, the wording of buttons and what happens when something goes wrong.</p>
+
+<h2>UI: how it looks and feels</h2>
+<p>User interface (UI) design is the visual layer: layout, typography, colour, icons, spacing and motion. Good UI makes the important thing obvious, keeps the brand consistent and makes a product feel trustworthy.</p>
+
+<h2>Why it affects sales</h2>
+<ul>
+  <li><strong>Clarity converts.</strong> When the next step is obvious, more visitors take it.</li>
+  <li><strong>Trust.</strong> A polished, consistent interface signals a business that takes care.</li>
+  <li><strong>Fewer drop-offs.</strong> Shorter forms and clearer checkouts mean fewer abandoned orders.</li>
+  <li><strong>Fewer support calls.</strong> When people can help themselves, your team spends less time explaining.</li>
+</ul>
+
+<h2>What the design process looks like</h2>
+<ol>
+  <li><strong>Research.</strong> Who the users are and what they are trying to do.</li>
+  <li><strong>Flows and wireframes.</strong> The structure and steps, before any colour.</li>
+  <li><strong>Prototype and test.</strong> A clickable version real people can try.</li>
+  <li><strong>Visual design.</strong> The final look, built on your brand.</li>
+  <li><strong>Design system.</strong> Reusable components so every new screen stays consistent and developers can build faster.</li>
+</ol>
+
+<h2>Signs your design needs work</h2>
+<ul>
+  <li>Customers call to ask things the website should answer</li>
+  <li>People add to cart but do not finish checkout</li>
+  <li>The site looks different from page to page</li>
+  <li>It is hard to use on a phone</li>
+</ul>
+
+<blockquote>See design details from our real projects on our <a href="../work/design.html">product design page</a>, or book a free demo to talk about yours.</blockquote>
+""",
+  },
+  {
     "slug": "website-or-mobile-app-first",
     "seo_title": "Website or Mobile App First? How to Decide",
     "title": "Website or mobile app: which does your business need first?",

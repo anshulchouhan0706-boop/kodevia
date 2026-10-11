@@ -65,6 +65,14 @@ function setVar(el, name, v, digits = 3) {
       box.classList.toggle('is-open', open);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
+    // Mouse users: the options pop out on hover, and stay while the pointer
+    // is over the button or the menu. Click still works everywhere.
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let t = 0;
+      const show = () => { clearTimeout(t); boxes.forEach((o) => o !== box && close(o)); box.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); };
+      box.addEventListener('pointerenter', show);
+      box.addEventListener('pointerleave', () => { clearTimeout(t); t = setTimeout(() => close(box), 260); });
+    }
     box.addEventListener('keydown', (e) => {
       const i = opts.indexOf(document.activeElement);
       if (e.key === 'Escape') close(box, true);
@@ -79,6 +87,78 @@ function setVar(el, name, v, digits = 3) {
     if (k === 'email') { a.href = 'mailto:' + email; a.textContent = email; }
     if (k === 'call') a.href = 'tel:' + phone;
     if (k === 'whatsapp') a.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(msg);
+  });
+})();
+
+/* ---------------------------------------------------------------- lead -- */
+// Book a free demo form. Validates in the browser, then posts the details to
+// a Google Apps Script web app that appends a row to a Google Sheet (see
+// google-sheets/SETUP.md). Paste the web app URL into data-endpoint on #lead.
+// Success is shown only after the request actually went out.
+(function lead() {
+  const form = document.getElementById('lead');
+  if (!form) return;
+  const endpoint = form.dataset.endpoint.trim();
+  const status = form.querySelector('.lead__status');
+  const done = form.querySelector('.lead__done');
+  const btn = form.querySelector('.lead__submit');
+  const msgs = {
+    name: 'Please tell us your name.',
+    phone: 'Please enter a 10-digit mobile number.',
+    email: 'Please enter a valid email address.',
+    service: 'Please choose what you need.',
+    consent: 'Please tick this box so we can contact you.',
+  };
+  const errFor = (f) => f.type === 'checkbox' ? form.querySelector('[data-for="consent"]') : f.closest('.lf').querySelector('.lf__err');
+  const check = (f) => {
+    if (f.name === 'phone') f.value = f.value.replace(/\D/g, '').slice(-10);
+    const ok = f.checkValidity();
+    const e = errFor(f);
+    if (e) e.textContent = ok ? '' : msgs[f.name] || 'Please check this field.';
+    f.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    return ok;
+  };
+  const required = [...form.querySelectorAll('[required]')];
+  required.forEach((f) => {
+    f.addEventListener('blur', () => { if (f.value || f.type === 'checkbox') check(f); });
+    f.addEventListener('input', () => { if (f.getAttribute('aria-invalid') === 'true') check(f); });
+    f.addEventListener('change', () => { if (f.getAttribute('aria-invalid') === 'true') check(f); });
+  });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.textContent = '';
+    const bad = required.filter((f) => !check(f));
+    if (bad.length) { bad[0].focus(); status.textContent = 'Please fix the highlighted fields.'; return; }
+    if (form.website.value) return; // bot filled the hidden field
+    const data = new URLSearchParams(new FormData(form));
+    data.delete('website');
+    data.set('phone', '+91' + form.phone.value);
+    data.set('consent', form.consent.checked ? 'Yes' : 'No');
+    data.set('page', location.href);
+    data.set('submitted', new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
+    if (!endpoint) {
+      status.innerHTML = 'Online booking is being set up. Please <a href="' + form.querySelector('.lead__done [data-contact]').href + '" target="_blank" rel="noopener">message us on WhatsApp</a> or call +91 92447 74704.';
+      return;
+    }
+    const fail = () => {
+      form.classList.remove('is-done');
+      [...form.children].forEach((c) => { c.hidden = c === done; });
+      btn.disabled = false;
+      status.innerHTML = 'Sorry, that did not go through. Please try again, or <a href="https://wa.me/' + document.body.dataset.whatsapp + '" target="_blank" rel="noopener">message us on WhatsApp</a>.';
+    };
+    if (!navigator.onLine) { fail(); return; }
+    // Apps Script takes seconds to answer, and its reply cannot be read across
+    // origins anyway (no-cors), so waiting told us nothing. Send in the
+    // background and thank the visitor at once. keepalive lets the request
+    // finish even if they close the tab; a real network failure still shows
+    // the error.
+    btn.disabled = true;
+    fetch(endpoint, { method: 'POST', mode: 'no-cors', body: data, keepalive: true }).catch(fail);
+    form.classList.add('is-done');
+    [...form.children].forEach((c) => { if (c !== done && c !== status) c.hidden = true; });
+    done.hidden = false;
+    done.querySelector('h3').setAttribute('tabindex', '-1');
+    done.querySelector('h3').focus();
   });
 })();
 
@@ -127,6 +207,19 @@ function setVar(el, name, v, digits = 3) {
   const t = document.querySelector('.tools');
   if (!t) return;
   new IntersectionObserver(([e], o) => { if (e.isIntersecting) { t.classList.add('is-in'); o.disconnect(); } }, { rootMargin: '0px 0px 20% 0px' }).observe(t);
+})();
+
+// Text arrives early: reveal each block just before it scrolls into view
+// (the engine waits until it is well inside), so nothing appears late.
+(function earlyReveal() {
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const el = e.target; io.unobserve(el);
+    el.classList.add('sc-in');
+    const st = parseFloat(el.getAttribute('data-sc-stagger'));
+    [...el.children].forEach((k, i) => { if (!isNaN(st)) k.style.transitionDelay = Math.min(i * st, 240) + 'ms'; k.classList.add('sc-in'); });
+  }), { rootMargin: '0px 0px 18% 0px', threshold: 0 });
+  document.querySelectorAll('[data-sc-in]').forEach((el) => io.observe(el));
 })();
 
 // Header: transparent over the hero, a clean solid bar once the page moves,
@@ -241,10 +334,14 @@ document.addEventListener('focusin', (e) => {
   let lastFrac = -1;
   function tick(now) {
     if (!on) return;
-    const tx = parseFloat((railEl.style.transform.match(/-?[\d.]+/) || [0])[0]) || 0;
+    const tx = parseFloat((railEl.style.transform.match(/translate3d\((-?[\d.]+)px/) || [0, 0])[1]) || 0;
     const w = innerWidth;
-    const reach = Math.max(0, Math.min(len, (w * 0.55 - tx)));
-    const frac = reach / (railEl.scrollWidth || 1);
+    const over = Math.max(railEl.scrollWidth - w, 1);
+    const pp = clamp01(-tx / over);  // how far the rail has travelled
+    // reach the middle of the screen early on, and the far right end by the
+    // time the rail stops
+    const reach = Math.max(0, Math.min(len, w * 0.55 - tx + w * 0.45 * pp));
+    const frac = Math.min(1, reach / (railEl.scrollWidth || 1) + (pp > 0.985 ? 1 : 0));
     if (Math.abs(frac - lastFrac) > 0.0005) {
       lastFrac = frac;
       const off = (len * (1 - frac)).toFixed(1);
@@ -321,7 +418,6 @@ function target(y) {
   const pP = flowP(geo.pieces, y);
   const pA = pinned(geo.asm, y);
   const asmUnpin = geo.asm.top + geo.asm.h - vh;
-  const startPin = geo.start.top;
 
   const o = { t: [0, 0, 0], spread: 1, rig: {}, look: {}, sceneO: 1, slidePx: 0, pA, pH, pP, phase: 'hero' };
 
@@ -365,28 +461,6 @@ function target(y) {
       // The stage slides off after the pin; the mark leaves with it and fades.
       o.slidePx = y - asmUnpin;
       o.sceneO = 1 - span(o.slidePx, vh * 0.15, vh * 0.75);
-    }
-    if (y > startPin - vh) {
-      // The close: the finished mark returns, resting beside the demo booking.
-      const into = startPin - y;
-      const k = 1 - span(into, 0, vh * 0.9);
-      const short = vh < 700;
-      o.t = [1, 1, 1]; o.spread = 1;
-      o.rig = {
-        x: mobile ? 0 : 2.1, y: mobile ? (short ? 2.2 : 1.95) : 0.05,
-        ry: -0.2 + (1 - k) * 0.3, rx: 0, scale: mobile ? (short ? 0.24 : 0.3) : 0.92,
-      };
-      o.look = { floor: 0.8, dim: 0, pulse: 0 };
-      o.slidePx = -Math.max(0, into);
-      o.sceneO = easeOut(k);
-      o.phase = 'start';
-      // The footer follows the close: once the close unpins, the mark leaves
-      // with its stage instead of hanging over the footer.
-      const startUnpin = geo.start.top + geo.start.h - vh;
-      if (y > startUnpin) {
-        o.slidePx = y - startUnpin;
-        o.sceneO = 1 - span(o.slidePx, vh * 0.2, vh * 0.7);
-      }
     }
   }
   return o;
@@ -555,8 +629,37 @@ async function boot() {
     // Decide the layout from the assembly position only (the hero position
     // is irrelevant), then hold it for the rest of the pass so it never flips
     // mid-animation.
-    const isCompact = W <= 860 || !(fitL && fitR);
-    if (compact === null) { compact = W <= 860; root.classList.toggle('tags-compact', compact); }
+    // Phones: no room for side columns, so one label at a time sits under the
+    // mark, with its line up to the piece that is docking.
+    const phone = W <= 860;
+    if (phone) {
+      if (compact !== false) { compact = false; root.classList.remove('tags-compact'); }
+      const pOut = 1 - span(pA, 0.74, 0.79);
+      const x0 = Math.max(20, W * 0.05);
+      els.tags.forEach((el, i) => {
+        const [a, b] = win[i];
+        const fadeIn = span(pA, a + 0.02, a + (b - a) * 0.45);
+        const on = tg.phase === 'asm' ? fadeIn * (i < 2 ? 1 - span(pA, b - 0.05, b) : pOut) : 0;
+        setVar(el, 'opacity', on);
+        const L = els.leads[i];
+        setVar(L.g, 'opacity', on);
+        if (on <= 0.001) return;
+        const tip = S.project(i, W, H);
+        const th = geo.tagH[i];
+        const ty = Math.min(box.b + 36, H - th - 28) + (1 - easeOut(on)) * 14;
+        el.style.transform = `translate3d(${x0.toFixed(1)}px, ${ty.toFixed(1)}px, 0)`;
+        const ax = x0 + 4, ay = ty + 6;
+        const my = (ay + tip.y) / 2;
+        const d = `M ${ax.toFixed(1)} ${ay.toFixed(1)} C ${ax.toFixed(1)} ${my.toFixed(1)}, ${tip.x.toFixed(1)} ${my.toFixed(1)}, ${tip.x.toFixed(1)} ${tip.y.toFixed(1)}`;
+        L.base.setAttribute('d', d); L.flow.setAttribute('d', d);
+        setVar(L.base, 'stroke-dashoffset', 1 - easeOut(on));
+        L.ring.setAttribute('cx', tip.x.toFixed(1)); L.ring.setAttribute('cy', tip.y.toFixed(1));
+        L.dot.setAttribute('cx', tip.x.toFixed(1)); L.dot.setAttribute('cy', tip.y.toFixed(1));
+      });
+      return;
+    }
+    const isCompact = !(fitL && fitR);
+    if (compact === null) { compact = false; root.classList.toggle('tags-compact', compact); }
     if (tg.phase === 'asm' && pA > 0.02 && pA < 0.06 && isCompact !== compact) {
       compact = isCompact; root.classList.toggle('tags-compact', compact);
     }
@@ -601,3 +704,26 @@ async function boot() {
 }
 
 boot();
+
+// Light / dark switch in the header. The choice is remembered across pages.
+(function themeToggle() {
+  const root = document.documentElement;
+  const sync = () => {
+    const light = root.getAttribute('data-theme') === 'light';
+    document.querySelectorAll('[data-theme-toggle]').forEach((b) => {
+      b.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
+      b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    });
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', light ? '#F8F7FB' : '#0A0A0B');
+  };
+  document.querySelectorAll('[data-theme-toggle]').forEach((b) => b.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.classList.add('theme-anim');
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('kodevia-theme', next); } catch (e) { /* storage blocked */ }
+    sync();
+    setTimeout(() => root.classList.remove('theme-anim'), 450);
+  }));
+  sync();
+})();

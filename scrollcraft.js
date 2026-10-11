@@ -340,6 +340,8 @@
         device: device,
         pinned: pinned,
         span: parseFloat(el.getAttribute('data-sc-span')) || (pinned ? 1.5 : 0),
+        // Phones get a shorter pin: a long hold on a small screen reads as lag.
+        spanM: parseFloat(el.getAttribute('data-sc-span-mobile')) || 0,
         dwell: parseFloat(el.getAttribute('data-sc-dwell')) || 0,
         clipTravel: pinned && el.getAttribute('data-sc-clip-map') === 'travel',
         p: 0, raw: 0, top: 0, height: 0, live: false,
@@ -393,6 +395,18 @@
         };
         if (cue.rOut === null) cue.rOut = (nums.length > 2 && !isNaN(nums[2])) ? 0.3 : 0.3;
         if (isNaN(cue.rise)) cue.rise = 1;
+        // Optional phone window, same "from to rampIn rampOut" format.
+        var mAttr = c.getAttribute('data-sc-cue-mobile');
+        if (mAttr) {
+          var m = mAttr.trim().split(/\s+/).map(parseFloat);
+          cue.desk = { from: cue.from, to: cue.to, rIn: cue.rIn, rOut: cue.rOut };
+          cue.phone = {
+            from: isNaN(m[0]) ? 0 : m[0],
+            to: m.length > 1 && !isNaN(m[1]) ? m[1] : null,
+            rIn: m.length > 2 && !isNaN(m[2]) ? clamp01(m[2]) : 0.3,
+            rOut: m.length > 3 && !isNaN(m[3]) ? clamp01(m[3]) : 0.3
+          };
+        }
         act.cues.push(cue);
       });
 
@@ -579,7 +593,7 @@
       if (scDead) return;
       vh = innerHeight; vw = innerWidth;
       acts.forEach(function (a) {
-        if (a.pinned) a.el.style.height = (a.span * 100) + 'vh';
+        if (a.pinned) a.el.style.height = (((smallMQ.matches && a.spanM) || a.span) * 100) + 'vh';
       });
       // The spacer is the whole document flow of a worldflight. Its height is
       // the sum of the leg weights plus one viewport: without that extra screen
@@ -902,6 +916,9 @@
           if (over > 0) {
             var extra = over * (a.railExtra || 0);
             a.rail.style.transform = 'translate3d(' + (-(over + extra) * a.p).toFixed(2) + 'px,0,0)';
+          } else if (a.rail.style.transform) {
+            // The rail fits (phones stack it), so it has nowhere to travel.
+            a.rail.style.transform = '';
           }
         }
 
@@ -928,6 +945,10 @@
         // cues
         for (var c = 0; c < a.cues.length; c++) {
           var q = a.cues[c];
+          if (q.phone) {
+            var w8 = smallMQ.matches ? q.phone : q.desk;
+            q.from = w8.from; q.to = w8.to; q.rIn = w8.rIn; q.rOut = w8.rOut;
+          }
           var vis;
           if (q.to === null) {
             vis = smooth((a.p - q.from) / 0.18);

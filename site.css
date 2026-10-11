@@ -1055,3 +1055,143 @@ a.svc:focus-visible { outline: 2px solid var(--k-light); outline-offset: 4px; }
 /* footer: room for the Resources column */
 .site-foot__top { grid-template-columns: minmax(0, 1.6fr) repeat(4, minmax(0, 1fr)); }
 @media (max-width: 1000px) { .site-foot__top { grid-template-columns: 1fr 1fr; } .site-foot__brand { grid-column: 1 / -1; } }
+
+/* ---- revision 7 --------------------------------------------------------- */
+/* Hero pop-out grows upward from the button's baseline, so it never runs off
+   the bottom of the screen. */
+.hero .demo--side .demo__menu { top: auto; bottom: -0.35rem; transform-origin: left bottom; }
+/* An invisible bridge between button and menu keeps hover open across the gap. */
+@media (hover: hover) and (pointer: fine) {
+  .demo.is-open::after { content: ""; position: absolute; inset: -0.8rem -1rem; z-index: 0; }
+  .demo__btn, .demo__menu { position: relative; z-index: 1; }
+  .demo__menu { position: absolute; z-index: 91; }
+}
+/* Reveals are quicker, so text is readable as soon as it arrives. */
+[data-sc-in], [data-sc-stagger] > * { transition-duration: 480ms !important; }
+
+/* ---- Book a free demo: copy + lead form --------------------------------- */
+.start { padding-block: clamp(5rem, 10vw, 8rem); }
+.start__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+.start__inner { padding: 0; max-width: none; position: sticky; top: calc(var(--bar-h) + 2rem); }
+.start__points { list-style: none; margin: 0 0 var(--sc-6); padding: 0; display: grid; gap: 0.7rem; }
+.start__points li { display: flex; align-items: center; gap: 0.65rem; font-size: var(--sc-t-base); }
+.start__points svg { width: 1.35rem; height: 1.35rem; flex: none; padding: 0.2rem; border-radius: 50%; color: #fff; background: var(--k-fill); }
+.start .demo--up .demo__menu { left: 0; right: auto; }
+.lead {
+  position: relative; padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: 28px;
+  background: linear-gradient(180deg, #19171F, #121117);
+  box-shadow: var(--sc-edge), inset 0 0 0 1px rgb(192 132 252 / 0.18), 0 40px 80px -40px rgb(76 29 149 / 0.6);
+}
+.lead::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(60% 40% at 90% 0%, rgb(139 92 246 / 0.18), transparent 70%); }
+.lead__head h3 { margin: 0; font-family: var(--sc-font-display); font-weight: 600; font-size: var(--sc-t-2xl); letter-spacing: var(--sc-track-snug); }
+.lead__head p { margin: 0.4rem 0 var(--sc-6); font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+.lead__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1rem; }
+.lf { display: grid; gap: 0.45rem; align-content: start; }
+.lf--wide { grid-column: 1 / -1; }
+.lf__label { font-size: var(--sc-t-sm); font-weight: 500; color: var(--sc-ink); }
+.lf__label b { color: var(--k-light); font-weight: 600; }
+.lf input, .lf select, .lf textarea {
+  width: 100%; min-height: 3.1rem; padding: 0.8rem 0.95rem; border: 0; border-radius: 14px;
+  font: 400 var(--sc-t-base)/1.4 var(--sc-font-text); color: var(--sc-ink);
+  background: #0E0D12; box-shadow: inset 0 0 0 1px #2E2B38;
+  transition: box-shadow 180ms var(--sc-ease-out), background-color 180ms var(--sc-ease-out);
+  appearance: none; -webkit-appearance: none;
+}
+.lf textarea { resize: vertical; min-height: 7rem; }
+.lf select { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='m5 8 5 5 5-5' fill='none' stroke='%23C084FC' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 1.1rem; padding-right: 2.6rem; cursor: pointer; }
+.lf select option { background: #17151E; color: #F5F5F7; }
+.lf input::placeholder, .lf textarea::placeholder { color: #8A8599; }
+.lf input:hover, .lf select:hover, .lf textarea:hover { box-shadow: inset 0 0 0 1px #4A4360; }
+.lf input:focus, .lf select:focus, .lf textarea:focus { outline: none; background: #121018; box-shadow: inset 0 0 0 1.5px var(--k-light), 0 0 0 4px rgb(139 92 246 / 0.2); }
+.lf [aria-invalid="true"] { box-shadow: inset 0 0 0 1.5px #F87171 !important; }
+.lf__err { min-height: 0; font-size: var(--sc-t-xs); color: #FCA5A5; }
+.lf__err:empty { display: none; }
+.lf__phone { display: flex; align-items: stretch; }
+.lf__cc { display: grid; place-items: center; padding: 0 0.9rem; border-radius: 14px 0 0 14px; font-size: var(--sc-t-base); color: var(--sc-ink-soft); background: #17151E; box-shadow: inset 0 0 0 1px #2E2B38; }
+.lf__phone input { border-radius: 0 14px 14px 0; }
+.lf-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.lf-check { display: flex; align-items: flex-start; gap: 0.7rem; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); line-height: 1.5; cursor: pointer; }
+.lf-check input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; flex: none; accent-color: #7340EA; }
+.lead__foot { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-top: var(--sc-6); }
+.lead__note { margin: 0; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+.lead__status { margin-top: var(--sc-4); font-size: var(--sc-t-sm); color: #FCA5A5; }
+.lead__status:empty { display: none; }
+.lead__status a { color: var(--k-light); }
+.lead__spin { display: none; width: 1rem; height: 1rem; border-radius: 50%; border: 2px solid rgb(255 255 255 / 0.35); border-top-color: #fff; animation: spin 700ms linear infinite; }
+.lead.is-sending .lead__spin { display: inline-block; }
+.lead.is-sending .lead__submit .btn__icon { display: none; }
+.lead__submit:disabled { opacity: 0.8; cursor: progress; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.lead__done { display: grid; justify-items: start; gap: 0.8rem; padding: var(--sc-6) 0; }
+.lead__done[hidden] { display: none; }
+.lead__done h3 { margin: 0.4rem 0 0; font-family: var(--sc-font-display); font-weight: 600; font-size: var(--sc-t-2xl); outline: none; }
+.lead__done p { margin: 0 0 0.6rem; color: var(--sc-ink-soft); }
+.lead__tick { display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: 50%; color: #fff; background: linear-gradient(135deg, #8B5CF6, #6A36E4); box-shadow: 0 12px 30px -10px rgb(109 40 217 / 0.9); }
+.lead__tick svg { width: 2rem; height: 2rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .lead.is-done .lead__tick { animation: tickIn 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  .lead.is-done .lead__tick path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: tickDraw 420ms 240ms ease-out forwards; }
+  @keyframes tickIn { from { transform: scale(0.4); opacity: 0; } }
+  @keyframes tickDraw { to { stroke-dashoffset: 0; } }
+}
+@media (max-width: 860px) {
+  .start__grid { grid-template-columns: 1fr; }
+  .start__inner { position: static; padding-top: 0; }
+  .lead__grid { grid-template-columns: 1fr; }
+  .lead { padding: 1.25rem; border-radius: 22px; }
+}
+
+.start__inner > .sc-body { display: block; }
+.lead__head h3 { line-height: 1.15; }
+/* contrast: inactive work rows stay readable (>= 3:1 for large type) */
+.wrow__n { color: rgb(245 245 247 / 0.62); }
+
+/* ---- phones: responsive pass ------------------------------------------- */
+@media (max-width: 860px) {
+  /* Header: logo, theme switch and the demo button on one clean line. The
+     logo already goes home, so the nav is dropped here. */
+  .bar { gap: 0.5rem; }
+  .bar .nav { display: none; }
+  .bar .theme-toggle { margin-left: auto; margin-right: 0; }
+  .bar .btn--bar { margin-left: 0; }
+  .brand { flex: none; }
+  .wordmark { white-space: nowrap; }
+
+  /* What we build: a plain vertical stack instead of the sideways rail, so
+     no card is ever cut off at the screen edges. */
+  .services.sc-act--pinned { height: auto !important; }
+  .services .services__stage { position: relative; top: auto; height: auto; overflow: visible; display: block; }
+  .services .rail {
+    width: auto; flex-direction: column; gap: var(--sc-5);
+    padding: var(--sc-8) var(--sc-gutter); transform: none !important;
+  }
+  .services .rail__wire, .services .rail__fx { display: none; }
+  .services .rail__lead, .services .svc, .services .rail__end { width: 100%; padding-inline: 0; }
+  .services .svc { padding: 0.75rem 0.75rem 1.25rem; opacity: 1; transform: none; }
+  .services .rail__end { padding-top: var(--sc-3); }
+
+  /* Breathing room and readable sizes on small screens. */
+  .pieces { min-height: 90svh; }
+  .tl { padding-left: 2.5rem; }
+  .tl__node { left: -2.5rem; }
+  .tl__track { left: 0.55rem; }
+  .faq__list summary { font-size: var(--sc-t-base); padding: 1.1rem 0; }
+  .site-foot__col--res { grid-column: 1 / -1; }
+  .site-foot__top-link { margin-left: 0; }
+}
+@media (max-width: 380px) {
+  .brand img { width: 1.8rem; height: 1.8rem; }
+  .wordmark { font-size: 1.2rem; }
+  .bar .btn--bar { padding: 0 0.85rem; }
+  .bar .btn--bar .btn__icon { display: none; }
+}
+
+/* ---- phones: labels on the K, shorter quiet stretches ------------------ */
+@media (max-width: 860px) {
+  .tag, .tag[data-tag="0"] { width: calc(100vw - 2 * max(20px, 5vw)); text-align: left; }
+  .tag__name { font-size: var(--sc-t-lg); }
+  .tag__note { max-width: 32ch; }
+  html:not(.tags-compact) .assemble__list { display: none; }
+  /* The hero copy holds and scrolls away with the stage. */
+  .pieces { min-height: 70svh; padding-block: var(--sc-7); }
+}

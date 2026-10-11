@@ -6,7 +6,7 @@ const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 // Reveal on scroll, once.
 const io = new IntersectionObserver((entries) => {
   entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { rootMargin: '0px 0px -8% 0px' });
+}, { rootMargin: '0px 0px 15% 0px' });
 document.querySelectorAll('.rv').forEach((el) => io.observe(el));
 
 // Tilt and light follow the pointer, smoothed per frame.
@@ -99,6 +99,14 @@ document.querySelectorAll('.chipc').forEach((c) => c.addEventListener('click', a
       box.classList.toggle('is-open', open);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
+    // Mouse users: the options pop out on hover, and stay while the pointer
+    // is over the button or the menu. Click still works everywhere.
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let t = 0;
+      const show = () => { clearTimeout(t); boxes.forEach((o) => o !== box && close(o)); box.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); };
+      box.addEventListener('pointerenter', show);
+      box.addEventListener('pointerleave', () => { clearTimeout(t); t = setTimeout(() => close(box), 260); });
+    }
     box.addEventListener('keydown', (e) => {
       const i = opts.indexOf(document.activeElement);
       if (e.key === 'Escape') close(box, true);
@@ -116,3 +124,43 @@ document.querySelectorAll('.chipc').forEach((c) => c.addEventListener('click', a
   });
 })();
 
+
+// Blog topic filter: shows matching articles; "All topics" resets.
+(function blogFilter() {
+  const bar = document.querySelector('.blog-filter');
+  if (!bar) return;
+  const btns = [...bar.querySelectorAll('.blog-filter__btn')];
+  const posts = [...document.querySelectorAll('.blog-list [data-tag]')];
+  btns.forEach((b) => b.addEventListener('click', () => {
+    const f = b.dataset.filter;
+    btns.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    posts.forEach((p) => {
+      const show = f === 'all' || p.dataset.tag === f;
+      p.hidden = !show;
+      if (show) { p.classList.remove('is-shown'); void p.offsetWidth; p.classList.add('is-shown'); }
+    });
+  }));
+})();
+
+// Light / dark switch in the header. The choice is remembered across pages.
+(function themeToggle() {
+  const root = document.documentElement;
+  const sync = () => {
+    const light = root.getAttribute('data-theme') === 'light';
+    document.querySelectorAll('[data-theme-toggle]').forEach((b) => {
+      b.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
+      b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    });
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', light ? '#F8F7FB' : '#0A0A0B');
+  };
+  document.querySelectorAll('[data-theme-toggle]').forEach((b) => b.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.classList.add('theme-anim');
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('kodevia-theme', next); } catch (e) { /* storage blocked */ }
+    sync();
+    setTimeout(() => root.classList.remove('theme-anim'), 450);
+  }));
+  sync();
+})();
