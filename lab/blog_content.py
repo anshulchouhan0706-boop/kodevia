@@ -537,4 +537,92 @@ ARTICLES = [
 <blockquote>Kodevia looks after the websites and apps we build once they are live: security updates, fixes, speed checks and new features as your business grows. Book a free demo to talk about care for your product.</blockquote>
 """,
   },
+  {
+    "slug": "google-business-profile-indore",
+    "seo_title": "How to Get Your Indore Business on Google Maps",
+    "title": "How to get your Indore business on Google Maps",
+    "description": "A step-by-step guide to creating and verifying a Google Business Profile, so customers in Indore find you on Maps and in local search.",
+    "date": "2026-10-18",
+    "cover": "w-travel",
+    "tag": "SEO",
+    "body": """
+<p>When someone in Indore searches "bakery near me" or "CA in Vijay Nagar", Google usually shows a map with three businesses before any website. Those places come from <strong>Google Business Profile</strong>, a free listing every local business can claim. If you are not on it, you are missing the customers who are ready to visit or call today.</p>
+
+<h2>Step 1: Check whether you already have a listing</h2>
+<p>Search your business name and area on Google Maps. Google sometimes creates a listing automatically from public information. If one exists, use <strong>Claim this business</strong> on it rather than creating a duplicate; two listings for one business confuse customers and split your reviews.</p>
+
+<h2>Step 2: Create or claim your profile</h2>
+<ol>
+  <li>Go to business.google.com and sign in with the Google account you want to manage the business from. Use a business account, not a personal one you might lose access to.</li>
+  <li>Enter your business name exactly as it appears on your signboard and invoices. Do not add keywords like "best" or the area name unless they are part of your real name.</li>
+  <li>Choose the most specific <strong>primary category</strong> you can, such as "Bakery" rather than "Store". You can add secondary categories later.</li>
+  <li>Decide whether customers visit you. Shops, clinics and offices add their address. Businesses that travel to customers, or work from home, choose a <strong>service area</strong> instead and hide the address.</li>
+  <li>Add your phone number and website.</li>
+</ol>
+
+<h2>Step 3: Verify it</h2>
+<p>Google needs to confirm the business is real before the listing appears in full. Depending on your business, it may ask for a short video of your premises and signage, a phone or email code, or a postcard to your address. Follow the option it offers; verification can take from a few minutes to several days.</p>
+
+<h2>Step 4: Complete every section</h2>
+<ul>
+  <li><strong>Hours</strong>, including special hours for festivals and holidays, so nobody arrives to a closed shutter.</li>
+  <li><strong>Photos</strong> of your storefront, interior, products and team. Real photos build far more trust than stock images.</li>
+  <li><strong>Services or products</strong> with short descriptions and, where it makes sense, prices.</li>
+  <li><strong>A description</strong> in plain words: what you do, who you serve and where.</li>
+  <li><strong>Attributes</strong> such as wheelchair access, online payments or women-led, where they apply.</li>
+</ul>
+
+<h2>Step 5: Ask for reviews, and reply to all of them</h2>
+<p>Reviews are one of the strongest signals for the map results, and they are what customers read before choosing. Ask happy customers directly, at the moment they are happiest: after a delivery, at the counter, or in a WhatsApp thank-you message with your review link. Reply to every review, good or bad, politely and briefly. Never buy reviews or offer discounts in exchange for them; Google removes them and can suspend the listing.</p>
+
+<h2>Step 6: Keep it alive</h2>
+<p>Post updates, offers and new photos every few weeks, answer questions customers ask on the listing, and keep your hours current. An active profile tells Google the business is open and cared for.</p>
+
+<h2>Make your website and profile agree</h2>
+<p>Your business name, phone number and area should read exactly the same on your Google profile, your website, Instagram, JustDial and every directory. Matching details help Google trust that all of them describe one business. Your website should also load fast on a phone and make it easy to call, message or get directions, because that is where many profile visitors go next.</p>
+
+<blockquote>Kodevia builds fast, search-ready websites for businesses in Indore, with your Google Business Profile, call and WhatsApp buttons set up to work together. Book a free demo to see what yours could look like.</blockquote>
+""",
+  },
+  {
+    "slug": "business-website-checklist",
+    "seo_title": "Business Website Checklist: 12 Things Every Site Needs",
+    "title": "Business website checklist: 12 things every site needs",
+    "description": "Twelve things every small business website in India needs to win customers and show up on Google, and how to check your own site in ten minutes.",
+    "date": "2026-10-18",
+    "cover": "w-food-dark",
+    "tag": "Checklist",
+    "body": """
+<p>A website does not need to be big to work. It needs to answer a visitor's questions quickly, make contacting you effortless, and give Google enough to understand what you do and where. Use this checklist on your own site; most of it you can check from your phone in ten minutes.</p>
+
+<h2>Win the visitor</h2>
+<ol>
+  <li><strong>Say what you do in the first screen.</strong> A visitor should know what you offer, for whom and where, without scrolling. "Welcome to our website" says nothing; "Furniture showroom in Indore, delivery across MP" says everything.</li>
+  <li><strong>Make it easy to contact you.</strong> Tap-to-call and WhatsApp buttons on every page, and a short enquiry form that asks only what you need.</li>
+  <li><strong>Show proof.</strong> Real photos of your work, products or premises, and genuine reviews or testimonials with names.</li>
+  <li><strong>Be clear about price.</strong> Even a starting price or a range helps visitors decide they can afford you before they call.</li>
+  <li><strong>Look right on a phone.</strong> Most of your visitors are on mobile. Text should be readable without zooming and buttons easy to tap.</li>
+  <li><strong>Load fast.</strong> If the page takes more than a few seconds on mobile data, many visitors leave before they see it. Oversized images are the usual culprit.</li>
+</ol>
+
+<h2>Help Google find you</h2>
+<ol start="7">
+  <li><strong>One clear page per service</strong>, each with its own heading and a description of what is included, rather than everything squeezed onto the home page.</li>
+  <li><strong>Page titles that match searches</strong>, such as "Interior designer in Indore" rather than "Home".</li>
+  <li><strong>Your name, phone and area on every page</strong>, usually in the footer, written exactly as on your Google Business Profile.</li>
+  <li><strong>HTTPS</strong>, the padlock in the address bar. Browsers warn visitors away from sites without it.</li>
+  <li><strong>Google Search Console set up</strong>, with your sitemap submitted, so you can see which searches bring visitors and spot problems early.</li>
+</ol>
+
+<h2>Keep it working</h2>
+<ol start="12">
+  <li><strong>Someone looking after it.</strong> Updates, backups, security patches and a check that the forms still deliver. A broken enquiry form can cost you leads for weeks before anyone notices.</li>
+</ol>
+
+<h2>How did your site do?</h2>
+<p>If you ticked ten or more, your website is in good shape; focus on content and reviews. If you missed several in the first group, visitors are probably leaving without contacting you. If you missed the second group, Google is likely struggling to show you for the searches that matter.</p>
+
+<blockquote>Want a second opinion? Book a free demo and Kodevia will walk through your current website against this checklist and tell you honestly what is worth fixing first.</blockquote>
+""",
+  },
 ]
